@@ -1,15 +1,15 @@
 STAR version=2.7.11b
 STAR compilation time,server,dir=2025-07-24T03:06:21+0000 :/opt/conda/conda-bld/star_1753326220084/work/source
 ##### Command Line:
-/opt/conda/bin/STAR-avx2 --runThreadN 8 --genomeDir STARIndex --readFilesIn raw-data/SRR32812471_1.fastq.gz raw-data/SRR32812471_2.fastq.gz --readFilesCommand zcat --outFileNamePrefix aligned/SRR32812471_ --outSAMtype BAM SortedByCoordinate --outSAMunmapped Within --quantMode GeneCounts
+/opt/conda/bin/STAR-avx2 --runThreadN 8 --genomeDir /work/data/STARIndex --readFilesIn /work/data/raw-data/SRR32812471_1.fastq.gz /work/data/raw-data/SRR32812471_2.fastq.gz --readFilesCommand zcat --outFileNamePrefix /work/data/aligned/SRR32812471_ --outSAMtype BAM SortedByCoordinate --outSAMunmapped Within --quantMode GeneCounts
 ##### Initial USER parameters from Command Line:
-outFileNamePrefix                 aligned/SRR32812471_
+outFileNamePrefix                 /work/data/aligned/SRR32812471_
 ###### All USER parameters from Command Line:
 runThreadN                    8     ~RE-DEFINED
-genomeDir                     STARIndex     ~RE-DEFINED
-readFilesIn                   raw-data/SRR32812471_1.fastq.gz   raw-data/SRR32812471_2.fastq.gz        ~RE-DEFINED
+genomeDir                     /work/data/STARIndex     ~RE-DEFINED
+readFilesIn                   /work/data/raw-data/SRR32812471_1.fastq.gz   /work/data/raw-data/SRR32812471_2.fastq.gz        ~RE-DEFINED
 readFilesCommand              zcat        ~RE-DEFINED
-outFileNamePrefix             aligned/SRR32812471_     ~RE-DEFINED
+outFileNamePrefix             /work/data/aligned/SRR32812471_     ~RE-DEFINED
 outSAMtype                    BAM   SortedByCoordinate        ~RE-DEFINED
 outSAMunmapped                Within        ~RE-DEFINED
 quantMode                     GeneCounts        ~RE-DEFINED
@@ -17,37 +17,37 @@ quantMode                     GeneCounts        ~RE-DEFINED
 
 ##### Final user re-defined parameters-----------------:
 runThreadN                        8
-genomeDir                         STARIndex
-readFilesIn                       raw-data/SRR32812471_1.fastq.gz   raw-data/SRR32812471_2.fastq.gz   
+genomeDir                         /work/data/STARIndex
+readFilesIn                       /work/data/raw-data/SRR32812471_1.fastq.gz   /work/data/raw-data/SRR32812471_2.fastq.gz   
 readFilesCommand                  zcat   
-outFileNamePrefix                 aligned/SRR32812471_
+outFileNamePrefix                 /work/data/aligned/SRR32812471_
 outSAMtype                        BAM   SortedByCoordinate   
 outSAMunmapped                    Within   
 quantMode                         GeneCounts   
 
 -------------------------------
 ##### Final effective command line:
-/opt/conda/bin/STAR-avx2   --runThreadN 8   --genomeDir STARIndex   --readFilesIn raw-data/SRR32812471_1.fastq.gz   raw-data/SRR32812471_2.fastq.gz      --readFilesCommand zcat      --outFileNamePrefix aligned/SRR32812471_   --outSAMtype BAM   SortedByCoordinate      --outSAMunmapped Within      --quantMode GeneCounts   
+/opt/conda/bin/STAR-avx2   --runThreadN 8   --genomeDir /work/data/STARIndex   --readFilesIn /work/data/raw-data/SRR32812471_1.fastq.gz   /work/data/raw-data/SRR32812471_2.fastq.gz      --readFilesCommand zcat      --outFileNamePrefix /work/data/aligned/SRR32812471_   --outSAMtype BAM   SortedByCoordinate      --outSAMunmapped Within      --quantMode GeneCounts   
 ----------------------------------------
 
 Number of fastq files for each mate = 1
 
    Input read files for mate 1 :
--rw-r--r--. 1 root root 215865083 Oct 31 01:12 raw-data/SRR32812471_1.fastq.gz
+-rw-r--r--. 1 root root 223318560 Oct 31 22:13 /work/data/raw-data/SRR32812471_1.fastq.gz
 
    readsCommandsFile:
-exec > "aligned/SRR32812471__STARtmp/tmp.fifo.read1"
+exec > "/work/data/aligned/SRR32812471__STARtmp/tmp.fifo.read1"
 echo FILE 0
-zcat      "raw-data/SRR32812471_1.fastq.gz"
+zcat      "/work/data/raw-data/SRR32812471_1.fastq.gz"
 
 
    Input read files for mate 2 :
--rw-r--r--. 1 root root 226335378 Oct 26 18:51 raw-data/SRR32812471_2.fastq.gz
+-rw-r--r--. 1 root root 226335378 Oct 31 22:13 /work/data/raw-data/SRR32812471_2.fastq.gz
 
    readsCommandsFile:
-exec > "aligned/SRR32812471__STARtmp/tmp.fifo.read2"
+exec > "/work/data/aligned/SRR32812471__STARtmp/tmp.fifo.read2"
 echo FILE 0
-zcat      "raw-data/SRR32812471_2.fastq.gz"
+zcat      "/work/data/raw-data/SRR32812471_2.fastq.gz"
 
 ParametersSolo: --soloCellFilterType CellRanger2.2 filtering parameters:  3000 0.99 10
 WARNING: --limitBAMsortRAM=0, will use genome size as RAM limit for BAM sorting
@@ -136,7 +136,7 @@ Number of real (reference) chromosomes= 61
 60	NW_023337853.1	31129	2737831936
 61	NC_005089.1	16299	2738094080
 --sjdbOverhang = 151 taken from the generated genome
-Started loading the genome: Fri Oct 31 01:20:49 2025
+Started loading the genome: Fri Oct 31 22:37:56 2025
 
 Genome: size given as a parameter = 2828396007
 SA: size given as a parameter = 22641003284
@@ -150,91 +150,91 @@ Loading Genome ... done! state: good=1 eof=0 fail=0 bad=0; loaded 2828396007 byt
 SA file size: 22641003284 bytes; state: good=1 eof=0 fail=0 bad=0
 Loading SA ... done! state: good=1 eof=0 fail=0 bad=0; loaded 22641003284 bytes
 Loading SAindex ... done: 1565873619 bytes
-Finished loading the genome: Fri Oct 31 01:20:57 2025
+Finished loading the genome: Fri Oct 31 22:38:04 2025
 
 Processing splice junctions database sjdbN=297161,   pGe.sjdbOverhang=151 
 alignIntronMax=alignMatesGapMax=0, the max intron size will be approximately determined by (2^winBinNbits)*winAnchorDistNbins=589824
 Created thread # 1
-Created thread # 2
 Starting to map file # 0
-mate 1:   raw-data/SRR32812471_1.fastq.gz
-mate 2:   raw-data/SRR32812471_2.fastq.gz
+mate 1:   /work/data/raw-data/SRR32812471_1.fastq.gz
+mate 2:   /work/data/raw-data/SRR32812471_2.fastq.gz
+Created thread # 2
 Created thread # 3
 Created thread # 4
 Created thread # 5
 Created thread # 6
 Created thread # 7
-BAM sorting: 349097 mapped reads
+BAM sorting: 298432 mapped reads
 BAM sorting bins genomic start loci:
-1	0	45386445
-2	0	118232981
-3	7	19997958
-4	7	84785849
-5	7	98496894
-6	7	98497164
-7	7	98497443
-8	7	98497606
-9	7	155690234
-10	8	54284991
-11	8	116467131
-12	9	63643213
-13	9	132258129
-14	11	31356026
-15	11	122582170
-16	17	29375733
-17	17	108859205
-18	18	29480380
-19	18	89158765
-20	18	141030950
-21	20	71927841
-22	21	3001410
-23	21	3036021
-24	21	50667872
-25	21	106123977
-26	22	69851398
-27	22	117114008
-28	23	43981042
-29	23	62443657
-30	23	94547320
-31	23	120600051
-32	24	84803710
-33	25	33224339
-34	25	97896917
-35	26	3052165
-36	26	36847195
-37	26	77489573
-38	27	81358121
-39	28	30132246
-40	29	9112763
-41	29	56169955
-42	30	46866241
-43	31	5902406
-44	31	44538789
-45	32	111263923
-46	53	12335
-47	58	97796
+1	0	45386299
+2	0	119995374
+3	7	21217343
+4	7	85853566
+5	7	98496899
+6	7	98497173
+7	7	98497444
+8	7	98497628
+9	7	156623458
+10	8	54614344
+11	8	121517289
+12	9	70166463
+13	9	132630801
+14	11	31355446
+15	11	122866808
+16	17	30654171
+17	17	113593579
+18	18	30319305
+19	18	89159725
+20	18	141212481
+21	20	72892544
+22	21	3002099
+23	21	3036307
+24	21	53526095
+25	21	107439022
+26	22	75608606
+27	22	117656398
+28	23	45720727
+29	23	62443717
+30	23	94835595
+31	23	120608865
+32	24	84807544
+33	25	34259206
+34	25	99241670
+35	26	3052302
+36	26	41903859
+37	26	77489460
+38	27	81355165
+39	28	24349123
+40	29	8192770
+41	29	47722440
+42	30	43353848
+43	31	5852491
+44	31	42112223
+45	32	105720491
+46	53	10733
+47	58	97420
 48	60	6335
-Thread #7 end of input stream, nextChar=-1
-Completed: thread #5
-Completed: thread #4
-Completed: thread #6
+Thread #0 end of input stream, nextChar=-1
+Completed: thread #7
 Completed: thread #0
 Completed: thread #1
 Joined thread # 1
-Completed: thread #3
-Completed: thread #7
 Completed: thread #2
 Joined thread # 2
+Completed: thread #6
+Completed: thread #3
 Joined thread # 3
+Completed: thread #5
+Completed: thread #4
 Joined thread # 4
 Joined thread # 5
 Joined thread # 6
 Joined thread # 7
-Oct 31 01:21:34 ..... finished mapping
+Oct 31 22:38:41 ..... finished mapping
 RAM after mapping:
-VmPeak:	28308224 kB; VmSize:	28221464 kB; VmHWM:	27746664 kB; VmRSS:	27701604 kB; 
+VmPeak:	28308228 kB; VmSize:	28218188 kB; VmHWM:	27761628 kB; VmRSS:	27720664 kB; 
 RAM after freeing genome index memory:
-VmPeak:	28308224 kB; VmSize:	 1819824 kB; VmHWM:	27746664 kB; VmRSS:	 1306572 kB; 
-Oct 31 01:21:34 ..... started sorting BAM
-Max memory needed for sorting = 55381298
+VmPeak:	28308228 kB; VmSize:	 1816548 kB; VmHWM:	27761628 kB; VmRSS:	 1321084 kB; 
+Oct 31 22:38:42 ..... started sorting BAM
+Max memory needed for sorting = 63583669
 ALL DONE!

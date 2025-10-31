@@ -33,7 +33,7 @@ quantMode                         GeneCounts
 Number of fastq files for each mate = 1
 
    Input read files for mate 1 :
--rw-r--r--. 1 root root 207838136 Oct 26 18:47 /work/data/raw-data/SRR32812479_1.fastq.gz
+-rw-r--r--. 1 root root 207838136 Oct 31 22:22 /work/data/raw-data/SRR32812479_1.fastq.gz
 
    readsCommandsFile:
 exec > "/work/data/aligned/SRR32812479__STARtmp/tmp.fifo.read1"
@@ -42,7 +42,7 @@ zcat      "/work/data/raw-data/SRR32812479_1.fastq.gz"
 
 
    Input read files for mate 2 :
--rw-r--r--. 1 root root 211453990 Oct 26 18:47 /work/data/raw-data/SRR32812479_2.fastq.gz
+-rw-r--r--. 1 root root 211453990 Oct 31 22:22 /work/data/raw-data/SRR32812479_2.fastq.gz
 
    readsCommandsFile:
 exec > "/work/data/aligned/SRR32812479__STARtmp/tmp.fifo.read2"
@@ -136,7 +136,7 @@ Number of real (reference) chromosomes= 61
 60	NW_023337853.1	31129	2737831936
 61	NC_005089.1	16299	2738094080
 --sjdbOverhang = 151 taken from the generated genome
-Started loading the genome: Thu Oct 30 22:17:32 2025
+Started loading the genome: Fri Oct 31 22:44:51 2025
 
 Genome: size given as a parameter = 2828396007
 SA: size given as a parameter = 22641003284
@@ -150,15 +150,15 @@ Loading Genome ... done! state: good=1 eof=0 fail=0 bad=0; loaded 2828396007 byt
 SA file size: 22641003284 bytes; state: good=1 eof=0 fail=0 bad=0
 Loading SA ... done! state: good=1 eof=0 fail=0 bad=0; loaded 22641003284 bytes
 Loading SAindex ... done: 1565873619 bytes
-Finished loading the genome: Thu Oct 30 22:17:40 2025
+Finished loading the genome: Fri Oct 31 22:44:59 2025
 
 Processing splice junctions database sjdbN=297161,   pGe.sjdbOverhang=151 
 alignIntronMax=alignMatesGapMax=0, the max intron size will be approximately determined by (2^winBinNbits)*winAnchorDistNbins=589824
 Created thread # 1
-Created thread # 2
 Starting to map file # 0
 mate 1:   /work/data/raw-data/SRR32812479_1.fastq.gz
 mate 2:   /work/data/raw-data/SRR32812479_2.fastq.gz
+Created thread # 2
 Created thread # 3
 Created thread # 4
 Created thread # 5
@@ -214,27 +214,27 @@ BAM sorting bins genomic start loci:
 46	58	68979
 47	58	98212
 48	60	6302
-Thread #2 end of input stream, nextChar=-1
-Completed: thread #6
+Thread #3 end of input stream, nextChar=-1
 Completed: thread #0
-Completed: thread #5
-Completed: thread #4
-Completed: thread #3
 Completed: thread #7
+Completed: thread #4
+Completed: thread #2
+Completed: thread #6
+Completed: thread #5
 Completed: thread #1
 Joined thread # 1
-Completed: thread #2
 Joined thread # 2
+Completed: thread #3
 Joined thread # 3
 Joined thread # 4
 Joined thread # 5
 Joined thread # 6
 Joined thread # 7
-Oct 30 22:18:16 ..... finished mapping
+Oct 31 22:45:35 ..... finished mapping
 RAM after mapping:
-VmPeak:	28290636 kB; VmSize:	28221204 kB; VmHWM:	27754980 kB; VmRSS:	27709920 kB; 
+VmPeak:	28308228 kB; VmSize:	28218192 kB; VmHWM:	27742800 kB; VmRSS:	27702196 kB; 
 RAM after freeing genome index memory:
-VmPeak:	28290636 kB; VmSize:	 1819564 kB; VmHWM:	27754980 kB; VmRSS:	 1311140 kB; 
-Oct 30 22:18:17 ..... started sorting BAM
+VmPeak:	28308228 kB; VmSize:	 1816552 kB; VmHWM:	27742800 kB; VmRSS:	 1303860 kB; 
+Oct 31 22:45:36 ..... started sorting BAM
 Max memory needed for sorting = 58077314
 ALL DONE!
