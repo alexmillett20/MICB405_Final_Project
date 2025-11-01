@@ -70,10 +70,12 @@ combined_data <- data.frame(row.names = control_rep1$gene_id,
                   control_rep4 = control_rep4$total,
                   IL4_rep2 = IL4_rep2$total,
                   IL4_rep3 = IL4_rep3$total,
-                  IL4_rep4 = IL4_rep4$total,
-                  IL13_rep1 = IL13_rep1$total,
-                  IL13_rep2 = IL13_rep2$total,
-                  IL13_rep3 = IL13_rep3$total)
+                  IL4_rep4 = IL4_rep4$total
+                  # ,
+                  # IL13_rep1 = IL13_rep1$total,
+                  # IL13_rep2 = IL13_rep2$total,
+                  # IL13_rep3 = IL13_rep3$total
+                  )
 
 
 # transform to matrix
@@ -82,9 +84,14 @@ combined_data_matrix<- as.matrix(combined_data)
 # Metadata for samples
 metadata <- data.frame(row.names = colnames(combined_data_matrix), 
                        treatment = c("control", "control", "control", 
-                                     "IL4", "IL4", "IL4",
-                                     "IL13", "IL13", "IL13")
+                                     "IL4", "IL4", "IL4"
+                                     # ,
+                                     # "IL13", "IL13", "IL13"
+                                     )
 )
+
+metadata$label <- rownames(metadata)
+
 colnames(combined_data_matrix) == rownames(metadata)
 
 # create dds_matrix
@@ -106,7 +113,8 @@ saveRDS(dds, "./DEA_outputs/dds.rds")
 rld <- rlog(dds)
 
 # Generate a PCA plot with DESeq2's plotPCA function
-plotPCA(rld, intgroup = "condition") 
+plotPCA(rld, intgroup = "treatment") +
+  geom_text(aes(label = label))
 
 # Calculate distances between samples in our log-transformed data
 sample_dists <- dist(t(assay(rld)))
