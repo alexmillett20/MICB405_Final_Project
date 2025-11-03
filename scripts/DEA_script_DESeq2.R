@@ -184,16 +184,141 @@ dds_matrix$treatment <- relevel(dds_matrix$treatment, ref = "control")
 
 dds <- DESeq(dds_matrix)
 
-saveRDS(dds, "./DEA_outputs/dds.rds")
+saveRDS(dds, "./DEA_outputs/dds_all_samples.rds")
+
+
+# redo dds without control rep 8 -----------------------------
+combined_data_no_ctrlrep8 <- data.frame(row.names = control_rep_1$gene_id,
+                            control_rep_1 = control_rep_1$total,
+                            control_rep_3 = control_rep_3$total,
+                            control_rep_4 = control_rep_4$total,
+                            control_rep_6 = control_rep_6$total,
+                            control_rep_7 = control_rep_7$total,
+                            control_rep_9 = control_rep_9$total,
+                            IL4_rep_2 = IL4_rep_2$total,
+                            IL4_rep_3 = IL4_rep_3$total,
+                            IL4_rep_4 = IL4_rep_4$total,
+                            IL4_rep_5 = IL4_rep_5$total,
+                            IL4_rep_6 = IL4_rep_6$total,
+                            IL4_rep_8 = IL4_rep_8$total,
+                            IL4_rep_9 = IL4_rep_9$total,
+                            IL13_rep_1 = IL13_rep_1$total,
+                            IL13_rep_2 = IL13_rep_2$total,
+                            IL13_rep_3 = IL13_rep_3$total,
+                            IL13_rep_4 = IL13_rep_4$total,
+                            IL13_rep_5 = IL13_rep_5$total,
+                            IL13_rep_6 = IL13_rep_6$total,
+                            IL13_rep_7 = IL13_rep_7$total,
+                            IL13_rep_8 = IL13_rep_8$total,
+                            IL13_rep_9 = IL13_rep_9$total
+)
+
+# transform to matrix
+combined_data_matrix_no_ctrlrep8 <- as.matrix(combined_data_no_ctrlrep8) 
+
+# Metadata for samples
+metadata_no_ctrlrep8 <- data.frame(row.names = colnames(combined_data_matrix_no_ctrlrep8), 
+                       treatment = c("control", "control", "control", "control", "control", "control",
+                                     "IL4", "IL4", "IL4", "IL4", "IL4", "IL4", "IL4",
+                                     "IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13"
+                       )
+)
+
+
+metadata_no_ctrlrep8$label <- rownames(metadata_no_ctrlrep8)
+
+colnames(combined_data_matrix_no_ctrlrep8) == rownames(metadata_no_ctrlrep8)
+
+# create dds_matrix
+dds_matrix_no_ctrlrep8 <- DESeqDataSetFromMatrix(countData = combined_data_matrix_no_ctrlrep8,  
+                                     colData = metadata_no_ctrlrep8, 
+                                     design = ~treatment)
+
+
+# Set control
+dds_matrix_no_ctrlrep8$treatment <- relevel(dds_matrix_no_ctrlrep8$treatment, ref = "control")
+
+
+dds_no_ctrlrep8 <- DESeq(dds_matrix_no_ctrlrep8)
+saveRDS(dds_no_ctrlrep8, "./DEA_outputs/dds_no_ctrlrep8.rds")
+
+# dds without control rep 8 compared to IL13 -----------------------------
+combined_data_no_ctrlrep8_IL13 <- data.frame(row.names = control_rep_1$gene_id,
+                                        control_rep_1 = control_rep_1$total,
+                                        control_rep_3 = control_rep_3$total,
+                                        control_rep_4 = control_rep_4$total,
+                                        control_rep_6 = control_rep_6$total,
+                                        control_rep_7 = control_rep_7$total,
+                                        control_rep_9 = control_rep_9$total,
+                                        IL13_rep_1 = IL13_rep_1$total,
+                                        IL13_rep_2 = IL13_rep_2$total,
+                                        IL13_rep_3 = IL13_rep_3$total,
+                                        IL13_rep_4 = IL13_rep_4$total,
+                                        IL13_rep_5 = IL13_rep_5$total,
+                                        IL13_rep_6 = IL13_rep_6$total,
+                                        IL13_rep_7 = IL13_rep_7$total,
+                                        IL13_rep_8 = IL13_rep_8$total,
+                                        IL13_rep_9 = IL13_rep_9$total
+)
+
+# transform to matrix
+combined_data_matrix_no_ctrlrep8_IL13 <- as.matrix(combined_data_no_ctrlrep8_IL13) 
+
+# Metadata for samples
+metadata_no_ctrlrep8_IL13 <- data.frame(row.names = colnames(combined_data_matrix_no_ctrlrep8_IL13), 
+                                   treatment = c("control", "control", "control", "control", "control", "control",
+                                                 "IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13"
+                                   )
+)
+
+
+metadata_no_ctrlrep8_IL13$label <- rownames(metadata_no_ctrlrep8_IL13)
+
+colnames(combined_data_matrix_no_ctrlrep8_IL13) == rownames(metadata_no_ctrlrep8_IL13)
+
+# create dds_matrix
+dds_matrix_no_ctrlrep8_IL13 <- DESeqDataSetFromMatrix(countData = combined_data_matrix_no_ctrlrep8_IL13,  
+                                                 colData = metadata_no_ctrlrep8_IL13, 
+                                                 design = ~treatment)
+
+
+# Set control
+dds_matrix_no_ctrlrep8_IL13$treatment <- relevel(dds_matrix_no_ctrlrep8_IL13$treatment, ref = "control")
+
+
+dds_no_ctrlrep8_IL13 <- DESeq(dds_matrix_no_ctrlrep8_IL13)
+saveRDS(dds_no_ctrlrep8_IL13, "./DEA_outputs/dds_no_ctrlrep8_IL13.rds")
 
 
 ##### generating plots -----------------------------------------------
+##### all data
 # Perform log transformation on our count data
 rld <- rlog(dds)
 
 # Generate a PCA plot with DESeq2's plotPCA function
-plotPCA(rld, intgroup = "treatment") +
+PCA_plot <- plotPCA(rld, intgroup = "treatment") +
   geom_text(aes(label = label))
+ggsave("./DEA_outputs/PCA_plot_all_samples.png", PCA_plot, width = 10, height = 10)
+
+
+##### no control rep 8
+# Perform log transformation on our count data
+rld_no_ctrlrep8 <- rlog(dds_no_ctrlrep8)
+
+# Generate a PCA plot with DESeq2's plotPCA function
+PCA_plot_no_ctrlrep8 <- plotPCA(rld_no_ctrlrep8, intgroup = "treatment") +
+  geom_text(aes(label = label))
+ggsave("./DEA_outputs/PCA_plot_no_ctrlrep8.png", PCA_plot_no_ctrlrep8, width = 10, height = 10)
+
+##### no control rep 8 and IL13 only
+# Perform log transformation on our count data
+rld_no_ctrlrep8_IL13 <- rlog(dds_no_ctrlrep8_IL13)
+
+# Generate a PCA plot with DESeq2's plotPCA function
+PCA_plot_no_ctrlrep8_IL13 <- plotPCA(rld_no_ctrlrep8_IL13, intgroup = "treatment") +
+  geom_text(aes(label = label))
+ggsave("./DEA_outputs/PCA_plot_no_ctrlrep8_IL13.png", PCA_plot_no_ctrlrep8_IL13, width = 10, height = 10)
+
 
 # pcaData <- plotPCA(rld, intgroup = c("treatment", "label"), returnData = TRUE)
 # 
