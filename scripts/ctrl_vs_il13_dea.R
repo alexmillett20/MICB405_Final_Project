@@ -190,7 +190,7 @@ rld_no_ctrlrep8_IL13 <- rlog(dds_no_ctrlrep8_IL13)
 # Generate a PCA plot with DESeq2's plotPCA function
 PCA_plot_no_ctrlrep8_IL13 <- plotPCA(rld_no_ctrlrep8_IL13, intgroup = "treatment") +
   geom_text(aes(label = label))
-ggsave("./DEA_outputs/PCA_plot_no_ctrlrep8_IL13.png", PCA_plot_no_ctrlrep8_IL13, width = 10, height = 10)
+ggsave("./plots/PCA_plot_no_ctrlrep8_IL13.png", PCA_plot_no_ctrlrep8_IL13, width = 10, height = 10)
 
 # Calculate distances between samples in our log-transformed data
 sample_dists <- dist(t(assay(rld_no_ctrlrep8_IL13)))
@@ -214,10 +214,10 @@ pheatmap(sample_dist_matrix,
 resultsNames(dds_no_ctrlrep8_IL13)
 
 # Now we will extract the results for our comparison between the control and with IL-13
-res <- results(dds_no_ctrlrep8_IL13, name = "condition_control_vs_IL-13") %>% as.data.frame() # we save it as a dataframe for easy manipulation with dplyr 
+res <- results(dds_no_ctrlrep8_IL13, name = "treatment_IL13_vs_control") %>% as.data.frame() # we save it as a dataframe for easy manipulation with dplyr 
 head(res)
 
-results(dds, contrast = c("condition", "12h", "6h"))
+results(dds_no_ctrlrep8_IL13, contrast = c("treatment", "IL13", "control"))
 
 glimpse(res)
 
@@ -243,14 +243,27 @@ res_filtered_final <- res_filtered %>%
 head(res_filtered_final)
 
 # Top 10 upregulated genes (most positive log2FoldChange)
-top10_genes <- res_filtered_final %>%
-  arrange(desc(log2FoldChange)) %>% # NOTE that we use the desc() function to organize the column in descending order
-  head(n = 10)
-top10_genes
+# top10_genes <- res_filtered_final %>%
+#   arrange(desc(log2FoldChange)) %>% # NOTE that we use the desc() function to organize the column in descending order
+#   head(n = 10)
+# top10_genes
+# 
+# bot10_genes <- res_filtered_final %>%
+#   arrange(log2FoldChange) %>% # NOTE since we don't use desc(), the column is organized in ascending order
+#   head(n = 10)
+# bot10_genes
 
-bot10_genes <- res_filtered_final %>%
-  arrange(log2FoldChange) %>% # NOTE since we don't use desc(), the column is organized in ascending order
-  head(n = 10)
-bot10_genes
+write_csv(res_filtered_final, "./DEA_outputs/ctrl_vs_il13_results.csv")
 
-write_csv(res_filtered_final, "chlamy_results.csv")
+res_filtered_up <- res_filtered_final %>%
+  filter(log2FoldChange >= 1)
+
+res_filtered_up
+
+res_filtered_down <- res_filtered_final %>%
+  filter(log2FoldChange <= -1)
+
+res_filtered_down
+
+write_csv(res_filtered_up, "./DEA_outputs/ctrl_vs_il13_up.csv")
+write_csv(res_filtered_down, "./DEA_outputs/ctrl_vs_il13_down.csv")

@@ -198,12 +198,12 @@ rld_no_ctrlrep8 <- rlog(dds_no_ctrlrep8)
 # Generate a PCA plot with DESeq2's plotPCA function
 PCA_plot_no_ctrlrep8 <- plotPCA(rld_no_ctrlrep8, intgroup = "treatment") +
   geom_text(aes(label = label))
-ggsave("./DEA_outputs/PCA_plot_no_ctrlrep8.png", PCA_plot_no_ctrlrep8, width = 10, height = 10)
+ggsave("./plots/PCA_plot_no_ctrlrep8.png", PCA_plot_no_ctrlrep8, width = 10, height = 10)
 
 
 
 # Calculate distances between samples in our log-transformed data
-sample_dists <- dist(t(assay(rld)))
+sample_dists <- dist(t(assay(rld_no_ctrlrep8)))
 
 # Convert the output to a matrix
 sample_dist_matrix <- as.matrix(sample_dists)
@@ -221,7 +221,7 @@ pheatmap(sample_dist_matrix,
          col = colours)
 
 # Names of the results that DESeq2 calculated
-resultsNames(dds)
+resultsNames(dds_no_ctrlrep8)
 
 # Now we will extract the results for our comparison between the 12h timepoint and the 1h timepoint
 res <- results(dds, name = "condition_12_hour_vs_1_hour") %>% as.data.frame() # we save it as a dataframe for easy manipulation with dplyr 
