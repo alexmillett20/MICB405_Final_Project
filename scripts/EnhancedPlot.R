@@ -18,8 +18,8 @@ suppressPackageStartupMessages(library(EnhancedVolcano))
 
 #Load DESeq2 object
 dds_c_13 <- readRDS("../DEA_outputs/dds_no_ctrlrep8_IL13.rds")
-#dds_c_4 <- readRDS("../DEA_outputs/dds_no_ctrlrep8_IL13.rds")
-#dds_4_13 <- readRDS("../DEA_outputs/dds_no_ctrlrep8_IL13.rds")
+dds_c_4 <- readRDS("../DEA_outputs/dds_no_ctrlrep8_IL4.rds")
+dds_4_13 <- readRDS("../DEA_outputs/dds_IL13_IL4.rds")
 
 #extract results
 res_c_13 <- results(dds_c_13,
