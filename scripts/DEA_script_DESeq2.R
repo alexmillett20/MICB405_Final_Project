@@ -349,7 +349,7 @@ combined_data_matrix_IL13_IL4 <- as.matrix(combined_data_IL13_IL4)
 
 # Metadata for samples
 metadata_IL13_IL4 <- data.frame(row.names = colnames(combined_data_matrix_IL13_IL4), 
-                                       treatment = c("control", "control", "control", "control", "control", "control",
+                                       treatment = c("IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13",
                                                      "IL4", "IL4", "IL4", "IL4", "IL4", "IL4", "IL4"
                                        ))
 
@@ -368,7 +368,7 @@ dds_matrix_IL13_IL4 <- DESeqDataSetFromMatrix(countData = combined_data_matrix_I
 dds_matrix_IL13_IL4$treatment <- relevel(dds_matrix_IL13_IL4$treatment, ref = "IL13")
 
 
-dds_no_IL13_IL4 <- DESeq(dds_matrix_IL13_IL4)
+dds_IL13_IL4 <- DESeq(dds_matrix_IL13_IL4)
 saveRDS(dds_IL13_IL4, "./DEA_outputs/dds_IL13_IL4.rds")
 
 
