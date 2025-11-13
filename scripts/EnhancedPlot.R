@@ -48,14 +48,33 @@ res_4_13 <- results(dds_4_13,
 
 # create custom key-value pairs for 'high', 'low', 'mid' expression by fold-change
 
-keyvals.colour <- ifelse(
+keyvals13.colour <- ifelse(
   res_c_13$log2FoldChange < -1.0, 'red',
   ifelse(res_c_13$log2FoldChange > 1.0, 'green',
          'grey'))
-keyvals.colour[is.na(keyvals.colour)] <- 'grey'
-names(keyvals.colour)[keyvals.colour == 'green'] <- 'high'
-names(keyvals.colour)[keyvals.colour == 'grey'] <- 'mid'
-names(keyvals.colour)[keyvals.colour == 'red'] <- 'low'
+keyvals13.colour[is.na(keyvals13.colour)] <- 'grey'
+names(keyvals13.colour)[keyvals13.colour == 'green'] <- 'high'
+names(keyvals13.colour)[keyvals13.colour == 'grey'] <- 'mid'
+names(keyvals13.colour)[keyvals13.colour == 'red'] <- 'low'
+
+keyvals4.colour <- ifelse(
+  res_c_4$log2FoldChange < -1.0, 'red',
+  ifelse(res_c_4$log2FoldChange > 1.0, 'green',
+         'grey'))
+
+keyvals4.colour[is.na(keyvals4.colour)] <- 'grey'
+names(keyvals4.colour)[keyvals4.colour == 'green'] <- 'high'
+names(keyvals4.colour)[keyvals4.colour == 'grey'] <- 'mid'
+names(keyvals4.colour)[keyvals4.colour == 'red'] <- 'low'
+
+keyvals413.colour <- ifelse(
+  res_4_13$log2FoldChange < -1.0, 'red',
+  ifelse(res_4_13$log2FoldChange > 1.0, 'green',
+         'grey'))
+keyvals413.colour[is.na(keyvals413.colour)] <- 'grey'
+names(keyvals413.colour)[keyvals413.colour == 'green'] <- 'high'
+names(keyvals413.colour)[keyvals413.colour == 'grey'] <- 'mid'
+names(keyvals413.colour)[keyvals413.colour == 'red'] <- 'low'
 
 EnhancedVolcano(res_c_13,
                 lab = rownames(res_c_13),
@@ -69,7 +88,7 @@ EnhancedVolcano(res_c_13,
                 FCcutoff = 1.0,
                 pointSize = 1.5,
                 labSize = 3.0,
-                colCustom = keyvals.colour,
+                colCustom = keyvals13.colour,
                 colAlpha = 1,
                 legendPosition = 'right',
                 legendLabSize = 10,
@@ -95,7 +114,7 @@ EnhancedVolcano(res_c_4,
                 FCcutoff = 1.0,
                 pointSize = 1.5,
                 labSize = 3.0,
-                colCustom = keyvals.colour,
+                colCustom = keyvals4.colour,
                 colAlpha = 1,
                 legendPosition = 'right',
                 legendLabSize = 10,
@@ -121,7 +140,7 @@ EnhancedVolcano(res_4_13,
                 FCcutoff = 1.0,
                 pointSize = 1.5,
                 labSize = 3.0,
-                colCustom = keyvals.colour,
+                colCustom = keyvals413.colour,
                 colAlpha = 1,
                 legendPosition = 'right',
                 legendLabSize = 10,
