@@ -326,7 +326,7 @@ saveRDS(dds_no_ctrlrep8_IL4, "./DEA_outputs/dds_no_ctrlrep8_IL4.rds")
 
 ## dds IL13 compared to IL4 -----------------------------
 combined_data_IL13_IL4 <- data.frame(row.names = IL13_rep_1$gene_id,
-                                            IL13_rep_1$total,
+                                            IL13_rep_1 = IL13_rep_1$total,
                                             IL13_rep_2 = IL13_rep_2$total,
                                             IL13_rep_3 = IL13_rep_3$total,
                                             IL13_rep_4 = IL13_rep_4$total,
