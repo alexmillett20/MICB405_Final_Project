@@ -1,7 +1,7 @@
 # Author: Alexandra Millett
 # MICB405 Final Project DESeq2 Analysis
 # Date created: October 31, 2025
-# Last updated: October 31, 2025
+# Last updated: November 13, 2025
 
 # This script is to perform differential expression analysis for the MICB405 project.
 # The structure of the script to perform DEA is based on tutorial 7. 
@@ -185,7 +185,7 @@ dds <- DESeq(dds_matrix)
 saveRDS(dds, "./DEA_outputs/dds_all_samples.rds")
 
 
-# redo dds without control rep 8 -----------------------------
+# redo dds without control rep 8 vs IL13 -----------------------------
 combined_data_no_ctrlrep8 <- data.frame(row.names = control_rep_1$gene_id,
                             control_rep_1 = control_rep_1$total,
                             control_rep_3 = control_rep_3$total,
@@ -371,6 +371,139 @@ dds_matrix_IL13_IL4$treatment <- relevel(dds_matrix_IL13_IL4$treatment, ref = "I
 dds_IL13_IL4 <- DESeq(dds_matrix_IL13_IL4)
 saveRDS(dds_IL13_IL4, "./DEA_outputs/dds_IL13_IL4.rds")
 
+################ FINALIZED DATA -------------------------------------
+### Based on the heatmap results from the dds objects generated above, we will remove the following replicates: control_rep3, control_rep8, IL13_rep6
+# redo dds control (no rep 3 and 8) vs IL4 -----------------------------
+combined_data_final_ctrl_IL4 <- data.frame(row.names = control_rep_1$gene_id,
+                                        control_rep_1 = control_rep_1$total,
+                                        control_rep_4 = control_rep_4$total,
+                                        control_rep_6 = control_rep_6$total,
+                                        control_rep_7 = control_rep_7$total,
+                                        control_rep_9 = control_rep_9$total,
+                                        IL4_rep_2 = IL4_rep_2$total,
+                                        IL4_rep_3 = IL4_rep_3$total,
+                                        IL4_rep_4 = IL4_rep_4$total,
+                                        IL4_rep_5 = IL4_rep_5$total,
+                                        IL4_rep_6 = IL4_rep_6$total,
+                                        IL4_rep_8 = IL4_rep_8$total,
+                                        IL4_rep_9 = IL4_rep_9$total)
+
+# transform to matrix
+combined_data_final_matrix_ctrl_IL4 <- as.matrix(combined_data_final_ctrl_IL4) 
+
+# Metadata for samples
+metadata_final_ctrl_IL4 <- data.frame(row.names = colnames(combined_data_final_matrix_ctrl_IL4), 
+                                   treatment = c("control", "control", "control", "control", "control",
+                                                 "IL4", "IL4", "IL4", "IL4", "IL4", "IL4", "IL4"))
+
+
+metadata_final_ctrl_IL4$label <- rownames(metadata_final_ctrl_IL4)
+
+colnames(combined_data_final_matrix_ctrl_IL4) == rownames(metadata_final_ctrl_IL4)
+
+# create dds_matrix
+dds_matrix_final_ctrl_IL4 <- DESeqDataSetFromMatrix(countData = combined_data_final_matrix_ctrl_IL4,  
+                                                 colData = metadata_final_ctrl_IL4, 
+                                                 design = ~treatment)
+
+
+# Set control
+dds_matrix_final_ctrl_IL4$treatment <- relevel(dds_matrix_final_ctrl_IL4$treatment, ref = "control")
+
+
+dds_final_ctrl_IL4 <- DESeq(dds_matrix_final_ctrl_IL4)
+saveRDS(dds_final_ctrl_IL4, "./DEA_outputs/dds_final_ctrl_IL4.rds")
+
+# redo dds control (no rep 3 and 8) vs IL13 (no rep 6) -----------------------------
+combined_data_final_ctrl_IL13 <- data.frame(row.names = control_rep_1$gene_id,
+                                            control_rep_1 = control_rep_1$total,
+                                            control_rep_4 = control_rep_4$total,
+                                            control_rep_6 = control_rep_6$total,
+                                            control_rep_7 = control_rep_7$total,
+                                            control_rep_9 = control_rep_9$total,
+                                            IL13_rep_1 = IL13_rep_1$total,
+                                            IL13_rep_2 = IL13_rep_2$total,
+                                            IL13_rep_3 = IL13_rep_3$total,
+                                            IL13_rep_4 = IL13_rep_4$total,
+                                            IL13_rep_5 = IL13_rep_5$total,
+                                            IL13_rep_7 = IL13_rep_7$total,
+                                            IL13_rep_8 = IL13_rep_8$total,
+                                            IL13_rep_9 = IL13_rep_9$total
+)
+
+# transform to matrix
+combined_data_final_matrix_ctrl_IL13 <- as.matrix(combined_data_final_ctrl_IL13) 
+
+# Metadata for samples
+metadata_final_ctrl_IL13 <- data.frame(row.names = colnames(combined_data_final_matrix_ctrl_IL13), 
+                                       treatment = c("control", "control", "control", "control", "control",
+                                                     "IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13"))
+
+
+metadata_final_ctrl_IL13$label <- rownames(metadata_final_ctrl_IL13)
+
+colnames(combined_data_final_matrix_ctrl_IL13) == rownames(metadata_final_ctrl_IL13)
+
+# create dds_matrix
+dds_matrix_final_ctrl_IL13 <- DESeqDataSetFromMatrix(countData = combined_data_final_matrix_ctrl_IL13,  
+                                                     colData = metadata_final_ctrl_IL13, 
+                                                     design = ~treatment)
+
+
+# Set control
+dds_matrix_final_ctrl_IL13$treatment <- relevel(dds_matrix_final_ctrl_IL13$treatment, ref = "control")
+
+
+dds_final_ctrl_IL13 <- DESeq(dds_matrix_final_ctrl_IL13)
+saveRDS(dds_final_ctrl_IL13, "./DEA_outputs/dds_final_ctrl_IL13.rds")
+
+
+
+## dds IL13 (no rep 6) compared to IL4 -----------------------------
+combined_data_final_IL13_IL4 <- data.frame(row.names = IL13_rep_1$gene_id,
+                                     IL13_rep_1 = IL13_rep_1$total,
+                                     IL13_rep_2 = IL13_rep_2$total,
+                                     IL13_rep_3 = IL13_rep_3$total,
+                                     IL13_rep_4 = IL13_rep_4$total,
+                                     IL13_rep_5 = IL13_rep_5$total,
+                                     IL13_rep_7 = IL13_rep_7$total,
+                                     IL13_rep_8 = IL13_rep_8$total,
+                                     IL13_rep_9 = IL13_rep_9$total,
+                                     IL4_rep_2 = IL4_rep_2$total,
+                                     IL4_rep_3 = IL4_rep_3$total,
+                                     IL4_rep_4 = IL4_rep_4$total,
+                                     IL4_rep_5 = IL4_rep_5$total,
+                                     IL4_rep_6 = IL4_rep_6$total,
+                                     IL4_rep_8 = IL4_rep_8$total,
+                                     IL4_rep_9 = IL4_rep_9$total)
+
+
+# transform to matrix
+combined_data_final_matrix_IL13_IL4 <- as.matrix(combined_data_final_IL13_IL4) 
+
+# Metadata for samples
+metadata_final_IL13_IL4 <- data.frame(row.names = colnames(combined_data_final_matrix_IL13_IL4), 
+                                treatment = c("IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13",
+                                              "IL4", "IL4", "IL4", "IL4", "IL4", "IL4", "IL4"
+                                ))
+
+
+metadata_final_IL13_IL4$label <- rownames(metadata_final_IL13_IL4)
+
+colnames(combined_data_final_matrix_IL13_IL4) == rownames(metadata_final_IL13_IL4)
+
+# create dds_matrix
+dds_matrix_final_IL13_IL4 <- DESeqDataSetFromMatrix(countData = combined_data_final_matrix_IL13_IL4,  
+                                              colData = metadata_final_IL13_IL4, 
+                                              design = ~treatment)
+
+
+# Set control
+dds_matrix_final_IL13_IL4$treatment <- relevel(dds_matrix_final_IL13_IL4$treatment, ref = "IL13")
+
+
+dds_final_IL13_IL4 <- DESeq(dds_matrix_final_IL13_IL4)
+saveRDS(dds_final_IL13_IL4, "./DEA_outputs/dds_final_IL13_IL4.rds")
 
 
 ##### generating plots -----------------------------------------------
@@ -420,4 +553,23 @@ PCA_plot_IL13_IL4 <- plotPCA(rld_IL13_IL4, intgroup = "treatment") +
 ggsave("./DEA_outputs/PCA_plot_IL13_IL4.png", PCA_plot_IL13_IL4, width = 10, height = 10)
 
 
+#################### FINALIZED PLOTS ------------------------
+
+### Control (no rep 8 or 3) and IL13 (no rep 6)
+rld_final_ctrl_IL13 <- rlog(dds_final_ctrl_IL13)
+PCA_plot_final_ctrl_IL13 <- plotPCA(rld_final_ctrl_IL13, intgroup = "treatment") +
+  geom_text(aes(label = label))
+ggsave("./DEA_outputs/PCA_plot_final_ctrl_IL13.png", PCA_plot_final_ctrl_IL13, width = 10, height = 10)
+
+### Control (no rep 8 or 3) and IL4
+rld_final_ctrl_IL4 <- rlog(dds_final_ctrl_IL4)
+PCA_plot_final_ctrl_IL4 <- plotPCA(rld_final_ctrl_IL4, intgroup = "treatment") +
+  geom_text(aes(label = label))
+ggsave("./DEA_outputs/PCA_plot_final_ctrl_IL4.png", PCA_plot_final_ctrl_IL4, width = 10, height = 10)
+
+### IL13 (no rep 6) and IL4
+rld_final_IL13_IL4 <- rlog(dds_final_IL13_IL4)
+PCA_plot_final_IL13_IL4 <- plotPCA(rld_final_IL13_IL4, intgroup = "treatment") +
+  geom_text(aes(label = label))
+ggsave("./DEA_outputs/PCA_plot_final_IL13_IL4.png", PCA_plot_final_IL13_IL4, width = 10, height = 10)
 
