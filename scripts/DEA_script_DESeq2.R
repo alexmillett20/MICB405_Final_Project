@@ -573,3 +573,83 @@ PCA_plot_final_IL13_IL4 <- plotPCA(rld_final_IL13_IL4, intgroup = "treatment") +
   geom_text(aes(label = label))
 ggsave("./DEA_outputs/PCA_plot_final_IL13_IL4.png", PCA_plot_final_IL13_IL4, width = 10, height = 10)
 
+
+##################### Generating filtered up and down regulated gene lists ----------------------------
+# Load finalized dds objects
+dds_final_ctrl_IL4 <- readRDS("./DEA_outputs/dds_final_ctrl_IL4.rds")
+dds_final_ctrl_IL13 <- readRDS("./DEA_outputs/dds_final_ctrl_IL13.rds")
+dds_final_IL13_IL4 <- readRDS("./DEA_outputs/dds_final_IL13_IL4.rds")
+
+# Get results for control vs IL4
+res_final_ctrl_IL4 <- results(dds_final_ctrl_IL4, name = "treatment_IL4_vs_control") %>% as.data.frame()
+
+res_final_ctrl_IL4_no_NA <- res_final_ctrl_IL4 %>%
+  drop_na()
+
+res_filtered_ctrl_IL_4 <- res_final_ctrl_IL4_no_NA %>%
+  filter(padj < 0.05)
+
+res_filtered_final_ctrl_IL_4 <- res_filtered_ctrl_IL_4 %>%
+  filter(abs(log2FoldChange) >= 1) %>%
+  rownames_to_column(("gene_id"))
+
+write_csv(res_filtered_final_ctrl_IL_4, "./DEA_outputs/filtered_DE_genes_final_ctrl_vs_IL4.csv")
+
+res_filtered_up_final_ctrl_IL_4 <- res_filtered_final_ctrl_IL_4 %>%
+  filter(log2FoldChange > 1)
+
+write_csv(res_filtered_up_final_ctrl_IL_4, "./DEA_outputs/filtered_upregulated_genes_final_ctrl_vs_IL4.csv")
+
+res_filtered_down_final_ctrl_IL_4 <- res_filtered_final_ctrl_IL_4 %>%
+  filter(log2FoldChange < -1)
+
+write_csv(res_filtered_down_final_ctrl_IL_4, "./DEA_outputs/filtered_downregulated_genes_final_ctrl_vs_IL4.csv")
+
+# Get results for control vs IL13
+res_final_ctrl_IL13 <- results(dds_final_ctrl_IL13, name = "treatment_IL13_vs_control") %>% as.data.frame()
+res_final_ctrl_IL13_no_NA <- res_final_ctrl_IL13 %>%
+  drop_na()
+
+res_filtered_ctrl_IL_13 <- res_final_ctrl_IL13_no_NA %>%
+  filter(padj < 0.05)
+
+res_filtered_final_ctrl_IL_13 <- res_filtered_ctrl_IL_13 %>%
+  filter(abs(log2FoldChange) >= 1) %>%
+  rownames_to_column(("gene_id"))
+
+write_csv(res_filtered_final_ctrl_IL_13, "./DEA_outputs/filtered_DE_genes_final_ctrl_vs_IL13.csv")
+res_filtered_up_final_ctrl_IL_13 <- res_filtered_final_ctrl_IL_13 %>%
+  filter(log2FoldChange > 1)
+
+write_csv(res_filtered_up_final_ctrl_IL_13, "./DEA_outputs/filtered_upregulated_genes_final_ctrl_vs_IL13.csv")
+
+res_filtered_down_final_ctrl_IL_13 <- res_filtered_final_ctrl_IL_13 %>%
+  filter(log2FoldChange < -1)
+
+write_csv(res_filtered_down_final_ctrl_IL_13, "./DEA_outputs/filtered_downregulated_genes_final_ctrl_vs_IL13.csv")
+
+# Get results for IL13 vs IL4
+res_final_IL13_IL4 <- results(dds_final_IL13_IL4, name = "treatment_IL4_vs_IL13") %>% as.data.frame()
+
+res_final_IL13_IL4_no_NA <- res_final_IL13_IL4 %>%
+  drop_na()
+
+res_filtered_IL13_IL4 <- res_final_IL13_IL4_no_NA %>%
+  filter(padj < 0.05)
+
+res_filtered_final_IL13_IL4 <- res_filtered_IL13_IL4 %>%
+  filter(abs(log2FoldChange) >= 1) %>%
+  rownames_to_column(("gene_id"))
+
+write_csv(res_filtered_final_IL13_IL4, "./DEA_outputs/filtered_DE_genes_final_IL13_vs_IL4.csv")
+
+res_filtered_up_final_IL13_IL4 <- res_filtered_final_IL13_IL4 %>%
+  filter(log2FoldChange > 1)
+
+write_csv(res_filtered_up_final_IL13_IL4, "./DEA_outputs/filtered_upregulated_genes_final_IL13_vs_IL4.csv")
+
+res_filtered_down_final_IL13_IL4 <- res_filtered_final_IL13_IL4 %>%
+  filter(log2FoldChange < -1)
+
+write_csv(res_filtered_down_final_IL13_IL4, "./DEA_outputs/filtered_downregulated_genes_final_IL13_vs_IL4.csv") 
+

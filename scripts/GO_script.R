@@ -11,7 +11,9 @@ suppressPackageStartupMessages(library(topGO))
 suppressPackageStartupMessages(library(org.Mm.eg.db))
 suppressPackageStartupMessages(library(ggplot2))
 
-data <- read.csv("./DEA_outputs/ctrl_vs_il13_results.csv")
+# data <- read.csv("./DEA_outputs/filtered_DE_genes_final_ctrl_vs_IL4.csv")
+# data <- read.csv("./DEA_outputs/filtered_DE_genes_final_ctrl_vs_IL13.csv")
+data <- read.csv("./DEA_outputs/filtered_DE_genes_final_IL13_vs_IL4.csv")
 
 allGO2genes <- annFUN.org(
   whichOnto = 'BP',
@@ -25,8 +27,12 @@ geneID2GO <- inverseList(allGO2genes)
 
 geneUniverse <- names(geneID2GO)
 
-up_gene <- read.csv("./DEA_outputs/ctrl_vs_il13_up.csv")
-down_gene <- read.csv("./DEA_outputs/ctrl_vs_il13_down.csv")
+# up_gene <- read.csv("./DEA_outputs/filtered_upregulated_genes_final_ctrl_vs_IL4.csv")
+# down_gene <- read.csv("./DEA_outputs/filtered_downregulated_genes_final_ctrl_vs_IL4.csv")
+# up_gene <- read.csv("./DEA_outputs/filtered_upregulated_genes_final_ctrl_vs_IL13.csv")
+# down_gene <- read.csv("./DEA_outputs/filtered_downregulated_genes_final_ctrl_vs_IL13.csv")
+up_gene <- read.csv("./DEA_outputs/filtered_upregulated_genes_final_IL13_vs_IL4.csv")
+down_gene <- read.csv("./DEA_outputs/filtered_downregulated_genes_final_IL13_vs_IL4.csv")
 
 upregulated_gene_names <- as.character(up_gene$gene_id)
 downregulated_gene_names <- as.character(down_gene$gene_id)
@@ -37,14 +43,18 @@ names(up_gene_list) <- geneUniverse
 names(down_gene_list) <- geneUniverse
 
 up_GO_data <- new("topGOdata",
-                  description = "MusMusculus_control_il13",
+                  # description = "MusMusculus_control_il4",
+                  # description = "MusMusculus_control_il13",
+                  description = "MusMusculus_il13_il4",
                   ontology = "BP",
                   allGenes = up_gene_list,
                   annot = annFUN.gene2GO,
                   gene2GO = geneID2GO)
 
 down_GO_data <- new("topGOdata",
-                    description = "MusMusculus_control_il13",
+                    # description = "MusMusculus_control_il4",
+                    # description = "MusMusculus_control_il13",
+                    description = "MusMusculus_il13_il4",
                     ontology = "BP",
                     allGenes = down_gene_list,
                     annot = annFUN.gene2GO,
@@ -87,7 +97,10 @@ up_plot <- ggplot(up_summary, aes(x = reorder(Term, -log10(as.numeric(weight01))
     plot.title = element_text(face = "bold", hjust = 0.5)
   )
 
-ggsave("./plots/GO_up_ctrl_vs_il13.png", up_plot)
+# ggsave("./plots/GO_up_ctrl_vs_il4.png", up_plot)
+# ggsave("./plots/GO_up_ctrl_vs_il13.png", up_plot)
+ggsave("./plots/GO_up_il13_vs_il4.png", up_plot)
+
 
 down_plot <- ggplot(down_summary, aes(x = reorder(Term, -log10(as.numeric(weight01))),
                          y = -log10(as.numeric(weight01)))) +
@@ -104,5 +117,6 @@ down_plot <- ggplot(down_summary, aes(x = reorder(Term, -log10(as.numeric(weight
     plot.title = element_text(face = "bold", hjust = 0.5)
   )
 
-ggsave("./plots/GO_down_ctrl_vs_il13.png", down_plot)
-
+# ggsave("./plots/GO_down_ctrl_vs_il4.png", down_plot)
+# ggsave("./plots/GO_down_ctrl_vs_il13.png", down_plot)
+ggsave("./plots/GO_down_il13_vs_il4.png", down_plot)
