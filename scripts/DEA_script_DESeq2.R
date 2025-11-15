@@ -587,11 +587,11 @@ res_final_ctrl_IL4_no_NA <- res_final_ctrl_IL4 %>%
   drop_na()
 
 res_filtered_ctrl_IL_4 <- res_final_ctrl_IL4_no_NA %>%
-  filter(padj < 0.05)
+  filter(padj < 0.0001)
 
 res_filtered_final_ctrl_IL_4 <- res_filtered_ctrl_IL_4 %>%
-  filter(abs(log2FoldChange) >= 1) %>%
-  rownames_to_column(("gene_id"))
+  filter(log2FoldChange <= -1 | log2FoldChange >= 1) %>%
+  rownames_to_column("gene_id")
 
 write_csv(res_filtered_final_ctrl_IL_4, "./DEA_outputs/filtered_DE_genes_final_ctrl_vs_IL4.csv")
 
@@ -611,11 +611,11 @@ res_final_ctrl_IL13_no_NA <- res_final_ctrl_IL13 %>%
   drop_na()
 
 res_filtered_ctrl_IL_13 <- res_final_ctrl_IL13_no_NA %>%
-  filter(padj < 0.05)
+  filter(padj < 0.0001)
 
 res_filtered_final_ctrl_IL_13 <- res_filtered_ctrl_IL_13 %>%
-  filter(abs(log2FoldChange) >= 1) %>%
-  rownames_to_column(("gene_id"))
+  filter(log2FoldChange <= -1 | log2FoldChange >= 1) %>%
+  rownames_to_column("gene_id")
 
 write_csv(res_filtered_final_ctrl_IL_13, "./DEA_outputs/filtered_DE_genes_final_ctrl_vs_IL13.csv")
 res_filtered_up_final_ctrl_IL_13 <- res_filtered_final_ctrl_IL_13 %>%
@@ -635,11 +635,11 @@ res_final_IL13_IL4_no_NA <- res_final_IL13_IL4 %>%
   drop_na()
 
 res_filtered_IL13_IL4 <- res_final_IL13_IL4_no_NA %>%
-  filter(padj < 0.05)
+  filter(padj < 0.0001)
 
 res_filtered_final_IL13_IL4 <- res_filtered_IL13_IL4 %>%
-  filter(abs(log2FoldChange) >= 1) %>%
-  rownames_to_column(("gene_id"))
+  filter(log2FoldChange <= -1 | log2FoldChange >= 1) %>%
+  rownames_to_column("gene_id")
 
 write_csv(res_filtered_final_IL13_IL4, "./DEA_outputs/filtered_DE_genes_final_IL13_vs_IL4.csv")
 
