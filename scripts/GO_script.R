@@ -12,30 +12,56 @@ suppressPackageStartupMessages(library(org.Mm.eg.db))
 suppressPackageStartupMessages(library(ggplot2))
 
 # data <- read.csv("./DEA_outputs/filtered_DE_genes_final_ctrl_vs_IL4.csv")
-# data <- read.csv("./DEA_outputs/filtered_DE_genes_final_ctrl_vs_IL13.csv")
-data <- read.csv("./DEA_outputs/filtered_DE_genes_final_IL13_vs_IL4.csv")
+data <- read.csv("./DEA_outputs/filtered_DE_genes_final_ctrl_vs_IL13.csv")
+# data <- read.csv("./DEA_outputs/filtered_DE_genes_final_IL13_vs_IL4.csv")
 
-allGO2genes <- annFUN.org(
-  whichOnto = 'BP',
-  feasibleGenes = NULL,
-  mapping = 'org.Mm.eg.db',
-  ID = 'symbol')
+# allGO2genes <- annFUN.org(
+#   whichOnto = 'BP',
+#   feasibleGenes = NULL,
+#   mapping = 'org.Mm.eg.db',
+#   ID = 'symbol')
 
-allGO2genes
+# allGO2genes
 
-geneID2GO <- inverseList(allGO2genes)
+# geneID2GO <- inverseList(allGO2genes)
+
+# geneUniverse <- names(geneID2GO)
+
+geneID2GO <- readMappings("gene_GO_mapping.tsv")
 
 geneUniverse <- names(geneID2GO)
 
 # up_gene <- read.csv("./DEA_outputs/filtered_upregulated_genes_final_ctrl_vs_IL4.csv")
 # down_gene <- read.csv("./DEA_outputs/filtered_downregulated_genes_final_ctrl_vs_IL4.csv")
-# up_gene <- read.csv("./DEA_outputs/filtered_upregulated_genes_final_ctrl_vs_IL13.csv")
-# down_gene <- read.csv("./DEA_outputs/filtered_downregulated_genes_final_ctrl_vs_IL13.csv")
-up_gene <- read.csv("./DEA_outputs/filtered_upregulated_genes_final_IL13_vs_IL4.csv")
-down_gene <- read.csv("./DEA_outputs/filtered_downregulated_genes_final_IL13_vs_IL4.csv")
+up_gene <- read.csv("./DEA_outputs/filtered_upregulated_genes_final_ctrl_vs_IL13.csv")
+down_gene <- read.csv("./DEA_outputs/filtered_downregulated_genes_final_ctrl_vs_IL13.csv")
+# up_gene <- read.csv("./DEA_outputs/filtered_upregulated_genes_final_IL13_vs_IL4.csv")
+# down_gene <- read.csv("./DEA_outputs/filtered_downregulated_genes_final_IL13_vs_IL4.csv")
 
-upregulated_gene_names <- as.character(up_gene$gene_id)
-downregulated_gene_names <- as.character(down_gene$gene_id)
+# Convert SYMBOL → ENTREZ ID
+up_gene_ids <- mapIds(org.Mm.eg.db,
+                      keys = up_gene$gene_id,
+                      keytype = "SYMBOL",
+                      column = "ENTREZID",
+                      multiVals = "first")
+
+down_gene_ids <- mapIds(org.Mm.eg.db,
+                        keys = down_gene$gene_id,
+                        keytype = "SYMBOL",
+                        column = "ENTREZID",
+                        multiVals = "first")
+
+# Remove NA IDs (genes without Entrez)
+up_gene_ids <- up_gene_ids[!is.na(up_gene_ids)]
+down_gene_ids <- down_gene_ids[!is.na(down_gene_ids)]
+
+
+# upregulated_gene_names <- as.character(up_gene$gene_id)
+# downregulated_gene_names <- as.character(down_gene$gene_id)
+
+upregulated_gene_names <- as.character(up_gene_ids)
+downregulated_gene_names <- as.character(down_gene_ids)
+
 
 up_gene_list <- factor(as.integer(geneUniverse %in% upregulated_gene_names))
 down_gene_list <- factor(as.integer(geneUniverse %in% downregulated_gene_names))
@@ -44,8 +70,8 @@ names(down_gene_list) <- geneUniverse
 
 up_GO_data <- new("topGOdata",
                   # description = "MusMusculus_control_il4",
-                  # description = "MusMusculus_control_il13",
-                  description = "MusMusculus_il13_il4",
+                  description = "MusMusculus_control_il13",
+                  # description = "MusMusculus_il13_il4",
                   ontology = "BP",
                   allGenes = up_gene_list,
                   annot = annFUN.gene2GO,
@@ -53,8 +79,8 @@ up_GO_data <- new("topGOdata",
 
 down_GO_data <- new("topGOdata",
                     # description = "MusMusculus_control_il4",
-                    # description = "MusMusculus_control_il13",
-                    description = "MusMusculus_il13_il4",
+                    description = "MusMusculus_control_il13",
+                    # description = "MusMusculus_il13_il4",
                     ontology = "BP",
                     allGenes = down_gene_list,
                     annot = annFUN.gene2GO,
@@ -98,8 +124,8 @@ up_plot <- ggplot(up_summary, aes(x = reorder(Term, -log10(as.numeric(weight01))
   )
 
 # ggsave("./plots/GO_up_ctrl_vs_il4.png", up_plot)
-# ggsave("./plots/GO_up_ctrl_vs_il13.png", up_plot)
-ggsave("./plots/GO_up_il13_vs_il4.png", up_plot)
+ggsave("./plots/GO_up_ctrl_vs_il13.png", up_plot)
+# ggsave("./plots/GO_up_il13_vs_il4.png", up_plot)
 
 
 down_plot <- ggplot(down_summary, aes(x = reorder(Term, -log10(as.numeric(weight01))),
@@ -118,5 +144,6 @@ down_plot <- ggplot(down_summary, aes(x = reorder(Term, -log10(as.numeric(weight
   )
 
 # ggsave("./plots/GO_down_ctrl_vs_il4.png", down_plot)
-# ggsave("./plots/GO_down_ctrl_vs_il13.png", down_plot)
-ggsave("./plots/GO_down_il13_vs_il4.png", down_plot)
+ggsave("./plots/GO_down_ctrl_vs_il13.png", down_plot)
+# ggsave("./plots/GO_down_il13_vs_il4.png", down_plot)
+
