@@ -1,10 +1,13 @@
+# MICB405 Final Project
+# Created by: Harper Rapkin
+# Last edited: 21/11/2025
+
 # Load the required library
 library(pheatmap)
 library(DESeq2) # Assuming dds is a DESeqDataSet object
 
 dds <- readRDS("~/Downloads/dds_final_IL13_IL4.rds")
 
-#dds <- DESeq(dds)   # only if not already run
 norm_counts <- counts(dds, normalized = TRUE)
 
 res <- results(dds)
@@ -31,17 +34,6 @@ reordered_samples <- sample_names[desired_order_indices]
 
 
 mat_z <- mat_z[, reordered_samples]
-
-
-pheatmap(
-  mat_z,
-  cluster_rows = TRUE,     # Genes cluster naturally
-  cluster_cols = FALSE,    # Keep your IL4/control ordering
-  show_rownames = TRUE,
-  show_colnames = TRUE,
-  main = "Top DE Genes (Z-score standardized)",
-  filename = "MICB405_IL13_IL4_Zscore_GeneHeatmap.png"
-)
 
 
 sample_groups <- data.frame(
