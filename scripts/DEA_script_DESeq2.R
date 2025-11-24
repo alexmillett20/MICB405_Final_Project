@@ -1,17 +1,19 @@
 # Author: Alexandra Millett
 # MICB405 Final Project DESeq2 Analysis
 # Date created: October 31, 2025
-# Last updated: November 13, 2025
+# Last updated: November 24, 2025
 
 # This script is to perform differential expression analysis for the MICB405 project.
 # The structure of the script to perform DEA is based on tutorial 7. 
+# First, all read counts files from STAR alignment are loaded. Then, DEA was performed separately for each comparison
+# (ctrl vs IL13, ctrl vs IL4, IL13 vs IL4), and PCA plots were generated from these DEA results.
+# Then, based on comparison of the PCA plot with all the samples (ctrl, IL13, IL4), and the PCA plots with two comparisons
+# (ctrl vs IL13, ctrl vs IL4, IL13 vs IL4), we generated final dds objects, labelled under FINALIZED DATA in this script.
+# These dds objects and PCA plots are what we used for downstream analysis and figure generation, and are labelled 'final'. 
 
 library(tidyverse)
 library(DESeq2)
-
-
-# Set path to a directory with files and load files into R, can do setwd("YourPath/")
-path <- getwd()
+# set path to top level of repository
 
 ##### assigning sample read counts to variables ----------------------------
 # Control replicate 1
@@ -170,8 +172,9 @@ metadata <- data.frame(row.names = colnames(combined_data_matrix),
 metadata$label <- rownames(metadata)
 
 colnames(combined_data_matrix) == rownames(metadata)
+# all true
 
-# create dds_matrix
+# create dds_matrix based on treatment
 dds_matrix <- DESeqDataSetFromMatrix(countData = combined_data_matrix,  
                                      colData = metadata, 
                                      design = ~treatment)
@@ -183,6 +186,16 @@ dds_matrix$treatment <- relevel(dds_matrix$treatment, ref = "control")
 dds <- DESeq(dds_matrix)
 
 saveRDS(dds, "./DEA_outputs/dds_all_samples.rds")
+
+##### generating plots -----------------------------------------------
+##### all data
+# Perform log transformation on our count data
+rld <- rlog(dds)
+
+# Generate a PCA plot with DESeq2's plotPCA function
+PCA_plot <- plotPCA(rld, intgroup = "treatment") +
+  geom_text(aes(label = label))
+ggsave("./plots/PCA_plot_all_samples.png", PCA_plot, width = 10, height = 10)
 
 
 # redo dds without control rep 8 vs IL13 -----------------------------
@@ -279,6 +292,16 @@ dds_matrix_no_ctrlrep8_IL13$treatment <- relevel(dds_matrix_no_ctrlrep8_IL13$tre
 dds_no_ctrlrep8_IL13 <- DESeq(dds_matrix_no_ctrlrep8_IL13)
 saveRDS(dds_no_ctrlrep8_IL13, "./DEA_outputs/dds_no_ctrlrep8_IL13.rds")
 
+##### generating plots -----------------------------------------------
+##### no control rep 8
+# Perform log transformation on our count data
+rld_no_ctrlrep8 <- rlog(dds_no_ctrlrep8)
+
+# Generate a PCA plot with DESeq2's plotPCA function
+PCA_plot_no_ctrlrep8 <- plotPCA(rld_no_ctrlrep8, intgroup = "treatment") +
+  geom_text(aes(label = label))
+ggsave("./plots/PCA_plot_no_ctrlrep8.png", PCA_plot_no_ctrlrep8, width = 10, height = 10)
+
 
 ## dds without control rep 8 compared to IL4 -----------------------------
 combined_data_no_ctrlrep8_IL4 <- data.frame(row.names = control_rep_1$gene_id,
@@ -323,6 +346,16 @@ dds_matrix_no_ctrlrep8_IL4$treatment <- relevel(dds_matrix_no_ctrlrep8_IL4$treat
 
 dds_no_ctrlrep8_IL4 <- DESeq(dds_matrix_no_ctrlrep8_IL4)
 saveRDS(dds_no_ctrlrep8_IL4, "./DEA_outputs/dds_no_ctrlrep8_IL4.rds")
+
+##### generating plots -----------------------------------------------
+##### no control rep 8 and IL4 only
+rld_no_ctrlrep8_IL4 <- rlog(dds_no_ctrlrep8_IL4)
+
+# Generate a PCA plot with DESeq2's plotPCA function
+PCA_plot_no_ctrlrep8_IL4 <- plotPCA(rld_no_ctrlrep8_IL4, intgroup = "treatment") +
+  geom_text(aes(label = label))
+ggsave("./plots/PCA_plot_no_ctrlrep8_IL4.png", PCA_plot_no_ctrlrep8_IL4, width = 10, height = 10)
+
 
 ## dds IL13 compared to IL4 -----------------------------
 combined_data_IL13_IL4 <- data.frame(row.names = IL13_rep_1$gene_id,
@@ -371,6 +404,15 @@ dds_matrix_IL13_IL4$treatment <- relevel(dds_matrix_IL13_IL4$treatment, ref = "I
 dds_IL13_IL4 <- DESeq(dds_matrix_IL13_IL4)
 saveRDS(dds_IL13_IL4, "./DEA_outputs/dds_IL13_IL4.rds")
 
+##### generating plots -----------------------------------------------
+#### IL13 and IL4 only
+rld_IL13_IL4 <- rlog(dds_IL13_IL4)
+
+# Generate a PCA plot with DESeq2's plotPCA function
+PCA_plot_IL13_IL4 <- plotPCA(rld_IL13_IL4, intgroup = "treatment") +
+  geom_text(aes(label = label))
+ggsave("./plots/PCA_plot_IL13_IL4.png", PCA_plot_IL13_IL4, width = 10, height = 10)
+
 ################ FINALIZED DATA -------------------------------------
 ### Based on the heatmap results from the dds objects generated above, we will remove the following replicates: control_rep3, control_rep8, IL13_rep6
 # redo dds control (no rep 3 and 8) vs IL4 -----------------------------
@@ -413,6 +455,14 @@ dds_matrix_final_ctrl_IL4$treatment <- relevel(dds_matrix_final_ctrl_IL4$treatme
 
 dds_final_ctrl_IL4 <- DESeq(dds_matrix_final_ctrl_IL4)
 saveRDS(dds_final_ctrl_IL4, "./DEA_outputs/dds_final_ctrl_IL4.rds")
+
+##### generating plots -----------------------------------------------
+### Control (no rep 8 or 3) and IL4
+rld_final_ctrl_IL4 <- rlog(dds_final_ctrl_IL4)
+PCA_plot_final_ctrl_IL4 <- plotPCA(rld_final_ctrl_IL4, intgroup = "treatment") +
+  geom_text(aes(label = label))
+ggsave("./plots/PCA_plot_final_ctrl_IL4.png", PCA_plot_final_ctrl_IL4, width = 10, height = 10)
+
 
 # redo dds control (no rep 3 and 8) vs IL13 (no rep 6) -----------------------------
 combined_data_final_ctrl_IL13 <- data.frame(row.names = control_rep_1$gene_id,
@@ -457,6 +507,12 @@ dds_matrix_final_ctrl_IL13$treatment <- relevel(dds_matrix_final_ctrl_IL13$treat
 dds_final_ctrl_IL13 <- DESeq(dds_matrix_final_ctrl_IL13)
 saveRDS(dds_final_ctrl_IL13, "./DEA_outputs/dds_final_ctrl_IL13.rds")
 
+##### generating plots -----------------------------------------------
+### Control (no rep 8 or 3) and IL13 (no rep 6)
+rld_final_ctrl_IL13 <- rlog(dds_final_ctrl_IL13)
+PCA_plot_final_ctrl_IL13 <- plotPCA(rld_final_ctrl_IL13, intgroup = "treatment") +
+  geom_text(aes(label = label))
+ggsave("./plots/PCA_plot_final_ctrl_IL13.png", PCA_plot_final_ctrl_IL13, width = 10, height = 10)
 
 
 ## dds IL13 (no rep 6) compared to IL4 -----------------------------
@@ -507,71 +563,12 @@ saveRDS(dds_final_IL13_IL4, "./DEA_outputs/dds_final_IL13_IL4.rds")
 
 
 ##### generating plots -----------------------------------------------
-##### all data
-# Perform log transformation on our count data
-rld <- rlog(dds)
-
-# Generate a PCA plot with DESeq2's plotPCA function
-PCA_plot <- plotPCA(rld, intgroup = "treatment") +
-  geom_text(aes(label = label))
-ggsave("./DEA_outputs/PCA_plot_all_samples.png", PCA_plot, width = 10, height = 10)
-
-
-##### no control rep 8
-# Perform log transformation on our count data
-rld_no_ctrlrep8 <- rlog(dds_no_ctrlrep8)
-
-# Generate a PCA plot with DESeq2's plotPCA function
-PCA_plot_no_ctrlrep8 <- plotPCA(rld_no_ctrlrep8, intgroup = "treatment") +
-  geom_text(aes(label = label))
-ggsave("./DEA_outputs/PCA_plot_no_ctrlrep8.png", PCA_plot_no_ctrlrep8, width = 10, height = 10)
-
-##### no control rep 8 and IL13 only
-# Perform log transformation on our count data
-rld_no_ctrlrep8_IL13 <- rlog(dds_no_ctrlrep8_IL13)
-
-# Generate a PCA plot with DESeq2's plotPCA function
-PCA_plot_no_ctrlrep8_IL13 <- plotPCA(rld_no_ctrlrep8_IL13, intgroup = "treatment") +
-  geom_text(aes(label = label))
-ggsave("./DEA_outputs/PCA_plot_no_ctrlrep8_IL13.png", PCA_plot_no_ctrlrep8_IL13, width = 10, height = 10)
-
-
-##### no control rep 8 and IL4 only
-rld_no_ctrlrep8_IL4 <- rlog(dds_no_ctrlrep8_IL4)
-
-# Generate a PCA plot with DESeq2's plotPCA function
-PCA_plot_no_ctrlrep8_IL4 <- plotPCA(rld_no_ctrlrep8_IL4, intgroup = "treatment") +
-  geom_text(aes(label = label))
-ggsave("./DEA_outputs/PCA_plot_no_ctrlrep8_IL4.png", PCA_plot_no_ctrlrep8_IL4, width = 10, height = 10)
-
-#### IL13 and IL4 only
-rld_IL13_IL4 <- rlog(dds_IL13_IL4)
-
-# Generate a PCA plot with DESeq2's plotPCA function
-PCA_plot_IL13_IL4 <- plotPCA(rld_IL13_IL4, intgroup = "treatment") +
-  geom_text(aes(label = label))
-ggsave("./DEA_outputs/PCA_plot_IL13_IL4.png", PCA_plot_IL13_IL4, width = 10, height = 10)
-
-
-#################### FINALIZED PLOTS ------------------------
-
-### Control (no rep 8 or 3) and IL13 (no rep 6)
-rld_final_ctrl_IL13 <- rlog(dds_final_ctrl_IL13)
-PCA_plot_final_ctrl_IL13 <- plotPCA(rld_final_ctrl_IL13, intgroup = "treatment") +
-  geom_text(aes(label = label))
-ggsave("./DEA_outputs/PCA_plot_final_ctrl_IL13.png", PCA_plot_final_ctrl_IL13, width = 10, height = 10)
-
-### Control (no rep 8 or 3) and IL4
-rld_final_ctrl_IL4 <- rlog(dds_final_ctrl_IL4)
-PCA_plot_final_ctrl_IL4 <- plotPCA(rld_final_ctrl_IL4, intgroup = "treatment") +
-  geom_text(aes(label = label))
-ggsave("./DEA_outputs/PCA_plot_final_ctrl_IL4.png", PCA_plot_final_ctrl_IL4, width = 10, height = 10)
-
 ### IL13 (no rep 6) and IL4
 rld_final_IL13_IL4 <- rlog(dds_final_IL13_IL4)
 PCA_plot_final_IL13_IL4 <- plotPCA(rld_final_IL13_IL4, intgroup = "treatment") +
   geom_text(aes(label = label))
-ggsave("./DEA_outputs/PCA_plot_final_IL13_IL4.png", PCA_plot_final_IL13_IL4, width = 10, height = 10)
+ggsave("./plots/PCA_plot_final_IL13_IL4.png", PCA_plot_final_IL13_IL4, width = 10, height = 10)
+
 
 
 ##################### Generating filtered up and down regulated gene lists ----------------------------
