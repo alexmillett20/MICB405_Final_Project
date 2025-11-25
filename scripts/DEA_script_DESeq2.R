@@ -587,7 +587,7 @@ res_final_ctrl_IL4_no_NA <- res_final_ctrl_IL4 %>%
   drop_na()
 
 res_filtered_ctrl_IL_4 <- res_final_ctrl_IL4_no_NA %>%
-  filter(padj < 0.0001)
+  filter(padj < 0.05)
 
 res_filtered_final_ctrl_IL_4 <- res_filtered_ctrl_IL_4 %>%
   filter(log2FoldChange <= -1 | log2FoldChange >= 1) %>%
@@ -611,7 +611,7 @@ res_final_ctrl_IL13_no_NA <- res_final_ctrl_IL13 %>%
   drop_na()
 
 res_filtered_ctrl_IL_13 <- res_final_ctrl_IL13_no_NA %>%
-  filter(padj < 0.0001)
+  filter(padj < 0.05)
 
 res_filtered_final_ctrl_IL_13 <- res_filtered_ctrl_IL_13 %>%
   filter(log2FoldChange <= -1 | log2FoldChange >= 1) %>%
@@ -635,7 +635,7 @@ res_final_IL13_IL4_no_NA <- res_final_IL13_IL4 %>%
   drop_na()
 
 res_filtered_IL13_IL4 <- res_final_IL13_IL4_no_NA %>%
-  filter(padj < 0.0001)
+  filter(padj < 0.05)
 
 res_filtered_final_IL13_IL4 <- res_filtered_IL13_IL4 %>%
   filter(log2FoldChange <= -1 | log2FoldChange >= 1) %>%
