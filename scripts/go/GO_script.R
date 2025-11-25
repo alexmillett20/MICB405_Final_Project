@@ -11,10 +11,9 @@ suppressPackageStartupMessages(library(topGO))
 suppressPackageStartupMessages(library(org.Mm.eg.db))
 suppressPackageStartupMessages(library(ggplot2))
 
-data <- read.csv("./DEA_outputs/filtered_DE_genes_final_ctrl_vs_IL4.csv")
-data <- read.csv("./DEA_outputs/filtered_DE_genes_final_ctrl_vs_IL13.csv")
-data <- read.csv("./DEA_outputs/filtered_DE_genes_final_IL13_vs_IL4.csv")
+# When running this script, you will want to generate the GO mapping object first
 
+## Create geneID2GO mapping
 allGO2genes <- annFUN.org(
   whichOnto = 'BP',
   feasibleGenes = NULL,
@@ -27,11 +26,61 @@ geneID2GO <- inverseList(allGO2genes)
 
 geneUniverse <- names(geneID2GO)
 
+## Control vs IL4 ##################################
+data <- read.csv("./DEA_outputs/filtered_DE_genes_final_ctrl_vs_IL4.csv")
+
 up_gene <- read.csv("./DEA_outputs/filtered_upregulated_genes_final_ctrl_vs_IL4.csv")
 down_gene <- read.csv("./DEA_outputs/filtered_downregulated_genes_final_ctrl_vs_IL4.csv")
 
+upregulated_gene_names <- as.character(up_gene$gene_id)
+downregulated_gene_names <- as.character(down_gene$gene_id)
+
+up_gene_list <- factor(as.integer(geneUniverse %in% upregulated_gene_names))
+down_gene_list <- factor(as.integer(geneUniverse %in% downregulated_gene_names))
+names(up_gene_list) <- geneUniverse
+names(down_gene_list) <- geneUniverse
+
+up_GO_data <- new("topGOdata", description = "MusMusculus_control_il4", ontology = "BP", allGenes = up_gene_list, annot = annFUN.gene2GO, gene2GO = geneID2GO)
+
+down_GO_data <- new("topGOdata", description = "MusMusculus_control_il4", ontology = "BP", allGenes = down_gene_list, annot = annFUN.gene2GO, gene2GO = geneID2GO)
+
+up_result <- runTest(up_GO_data, algorithm = "weight01", statistic = "fisher")
+
+down_result <- runTest(down_GO_data, algorithm = "weight01", statistic = "fisher")
+
+up_GO <- GenTable(up_GO_data, weight01 = up_result, orderBy = "up_result", ranksOf = "up_result", topNodes = 30, numChar = 200)
+
+down_GO <- GenTable(down_GO_data, weight01 = down_result, orderBy = "down_result", ranksOf = "down_result", topNodes = 30, numChar = 200)
+
+
+# ## Control vs IL13 ##############################
+data <- read.csv("./DEA_outputs/filtered_DE_genes_final_ctrl_vs_IL13.csv")
+
 up_gene <- read.csv("./DEA_outputs/filtered_upregulated_genes_final_ctrl_vs_IL13.csv")
 down_gene <- read.csv("./DEA_outputs/filtered_downregulated_genes_final_ctrl_vs_IL13.csv")
+
+upregulated_gene_names <- as.character(up_gene$gene_id)
+downregulated_gene_names <- as.character(down_gene$gene_id)
+
+up_gene_list <- factor(as.integer(geneUniverse %in% upregulated_gene_names))
+down_gene_list <- factor(as.integer(geneUniverse %in% downregulated_gene_names))
+names(up_gene_list) <- geneUniverse
+names(down_gene_list) <- geneUniverse
+
+up_GO_data <- new("topGOdata", description = "MusMusculus_control_il13", ontology = "BP", allGenes = up_gene_list, annot = annFUN.gene2GO, gene2GO = geneID2GO)
+
+down_GO_data <- new("topGOdata", description = "MusMusculus_control_il13", ontology = "BP", allGenes = down_gene_list, annot = annFUN.gene2GO, gene2GO = geneID2GO)
+
+up_result <- runTest(up_GO_data, algorithm = "weight01", statistic = "fisher")
+
+down_result <- runTest(down_GO_data, algorithm = "weight01", statistic = "fisher")
+
+up_GO <- GenTable(up_GO_data, weight01 = up_result, orderBy = "up_result", ranksOf = "up_result", topNodes = 30, numChar = 200)
+
+down_GO <- GenTable(down_GO_data, weight01 = down_result, orderBy = "down_result", ranksOf = "down_result", topNodes = 30, numChar = 200)
+
+# ## IL13 vs IL4 ################################
+data <- read.csv("./DEA_outputs/filtered_DE_genes_final_IL13_vs_IL4.csv")
 
 up_gene <- read.csv("./DEA_outputs/filtered_upregulated_genes_final_IL13_vs_IL4.csv")
 down_gene <- read.csv("./DEA_outputs/filtered_downregulated_genes_final_IL13_vs_IL4.csv")
@@ -39,50 +88,28 @@ down_gene <- read.csv("./DEA_outputs/filtered_downregulated_genes_final_IL13_vs_
 upregulated_gene_names <- as.character(up_gene$gene_id)
 downregulated_gene_names <- as.character(down_gene$gene_id)
 
-
 up_gene_list <- factor(as.integer(geneUniverse %in% upregulated_gene_names))
 down_gene_list <- factor(as.integer(geneUniverse %in% downregulated_gene_names))
 names(up_gene_list) <- geneUniverse
 names(down_gene_list) <- geneUniverse
 
-up_GO_data <- new("topGOdata",
-                  # description = "MusMusculus_control_il4",
-                  # description = "MusMusculus_control_il13",
-                  description = "MusMusculus_il13_il4",
-                  ontology = "BP",
-                  allGenes = up_gene_list,
-                  annot = annFUN.gene2GO,
-                  gene2GO = geneID2GO)
+up_GO_data <- new("topGOdata", description = "MusMusculus_il13_il4", ontology = "BP", allGenes = up_gene_list, annot = annFUN.gene2GO, gene2GO = geneID2GO)
 
-down_GO_data <- new("topGOdata",
-                    # description = "MusMusculus_control_il4",
-                    # description = "MusMusculus_control_il13",
-                    description = "MusMusculus_il13_il4",
-                    ontology = "BP",
-                    allGenes = down_gene_list,
-                    annot = annFUN.gene2GO,
-                    gene2GO = geneID2GO)
+down_GO_data <- new("topGOdata", description = "MusMusculus_il13_il4", ontology = "BP", allGenes = down_gene_list, annot = annFUN.gene2GO, gene2GO = geneID2GO)
 
-up_result <- runTest(up_GO_data,
-                     algorithm = "weight01",
-                     statistic = "fisher")
+up_result <- runTest(up_GO_data, algorithm = "weight01", statistic = "fisher")
 
-down_result <- runTest(down_GO_data,
-                       algorithm = "weight01",
-                       statistic = "fisher")
+down_result <- runTest(down_GO_data, algorithm = "weight01", statistic = "fisher")
 
-up_GO <- GenTable(up_GO_data,
-                       weight01 = up_result,
-                       orderBy = "up_result",
-                       ranksOf = "up_result",
-                       topNodes = 30)
+up_GO <- GenTable(up_GO_data, weight01 = up_result, orderBy = "up_result", ranksOf = "up_result", topNodes = 30, numChar = 200)
 
-down_GO <- GenTable(down_GO_data,
-                         weight01 = down_result,
-                         orderBy = "down_result",
-                         ranksOf = "down_result",
-                         topNodes = 30)
+down_GO <- GenTable(down_GO_data, weight01 = down_result, orderBy = "down_result", ranksOf = "down_result", topNodes = 30, numChar = 200)
 
+
+
+
+
+# Visualize GO results ##############################
 
 down_GO_filtered <- down_GO %>%
   mutate(GeneRatio = Significant/Annotated, weight01 = as.numeric(weight01)) %>%
@@ -127,6 +154,11 @@ down_GO_filtered_arranged %>%
   scale_y_continuous(limits = c(0,1), breaks = seq(0, 1, 0.25), expand = c(0, 0)) # this changes the scale of the axes
 
 
+# Choose which plots to save
+# ggsave("./plots/go-plots/ctrl_vs_il4/GO_down_ctrl_vs_il4.png", width = 8, height = 6)
+# ggsave("./plots/go-plots/ctrl_vs_il13/GO_down_ctrl_vs_il13.png", width = 8, height = 6)
+ggsave("./plots/go-plots/il13_vs_il4/GO_down_il13_vs_il4.png", width = 8, height = 6)
+
 up_GO_filtered <- up_GO %>%
   mutate(GeneRatio = Significant/Annotated, weight01 = as.numeric(weight01)) %>%
   filter(weight01 <= 0.05) %>%
@@ -159,6 +191,10 @@ up_GO_filtered_arranged %>%
   theme(panel.border = element_rect(color = "black"), panel.grid = element_line(colour = "grey96")) +
   scale_y_continuous(limits = c(0,1), breaks = seq(0, 1, 0.25), expand = c(0, 0)) # this changes the scale of the axes  
 
+# Choose which plots to save
+# ggsave("./plots/go-plots/ctrl_vs_il4/GO_up_ctrl_vs_il4.png", width = 8, height = 6)
+# ggsave("./plots/go-plots/ctrl_vs_il13/GO_up_ctrl_vs_il13.png", width = 8, height = 6)
+ggsave("./plots/go-plots/il13_vs_il4/GO_up_il13_vs_il4.png", width = 8, height = 6)
 
 # Prepare data for combined plot
 # Add labels to upregulated and downregulated dataframes
@@ -194,16 +230,7 @@ joined_GO_filtered_arranged %>%
   scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.2), expand = c(0, 0)) +
   facet_grid(.~ up_down)
 
-# ggsave("./plots/GO_up_down_ctrl_vs_il4.png", width = 10, height = 6)
-# ggsave("./plots/GO_up_down_ctrl_vs_il13.png", width = 10, height = 6)
-ggsave("./plots/GO_up_down_il13_vs_il4.png", width = 10, height = 6)
-
-# ggsave("./plots/GO_up_ctrl_vs_il4.png", up_plot)
-# ggsave("./plots/GO_up_ctrl_vs_il13.png", up_plot)
-# ggsave("./plots/GO_up_il13_vs_il4.png", up_plot)
-
-
-ggsave("./plots/GO_down_ctrl_vs_il4.png", down_plot)
-# ggsave("./plots/GO_down_ctrl_vs_il13.png", down_plot)
-# ggsave("./plots/GO_down_il13_vs_il4.png", down_plot)
-
+# Choose which plots to save 
+# ggsave("./plots/go-plots/ctrl_vs_il4/GO_up_down_ctrl_vs_il4.png", width = 10, height = 6)
+# ggsave("./plots/go-plots/ctrl_vs_il13/GO_up_down_ctrl_vs_il13.png", width = 10, height = 6)
+ggsave("./plots/go-plots/il13_vs_il4/GO_up_down_il13_vs_il4.png", width = 10, height = 6)
