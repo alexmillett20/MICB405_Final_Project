@@ -46,16 +46,16 @@ res_4_13 <- results(dds_4_13,
 #                x = 'log2FoldChange',
 #                y = 'padj')
 
-# create custom key-value pairs for 'high', 'low', 'mid' expression by fold-change
+# create custom key-value pairs for 'high', 'low', non-significant expression by fold-change
 
 keyvals13.colour <- ifelse(
   res_c_13$log2FoldChange < -1.0, 'red',
   ifelse(res_c_13$log2FoldChange > 1.0, 'green',
          'grey'))
 keyvals13.colour[is.na(keyvals13.colour)] <- 'grey'
-names(keyvals13.colour)[keyvals13.colour == 'green'] <- 'high'
-names(keyvals13.colour)[keyvals13.colour == 'grey'] <- 'mid'
-names(keyvals13.colour)[keyvals13.colour == 'red'] <- 'low'
+names(keyvals13.colour)[keyvals13.colour == 'green'] <- 'upregulated'
+names(keyvals13.colour)[keyvals13.colour == 'grey'] <- 'non-significant'
+names(keyvals13.colour)[keyvals13.colour == 'red'] <- 'downregulated'
 
 keyvals4.colour <- ifelse(
   res_c_4$log2FoldChange < -1.0, 'red',
@@ -63,28 +63,35 @@ keyvals4.colour <- ifelse(
          'grey'))
 
 keyvals4.colour[is.na(keyvals4.colour)] <- 'grey'
-names(keyvals4.colour)[keyvals4.colour == 'green'] <- 'high'
-names(keyvals4.colour)[keyvals4.colour == 'grey'] <- 'mid'
-names(keyvals4.colour)[keyvals4.colour == 'red'] <- 'low'
+names(keyvals4.colour)[keyvals4.colour == 'green'] <- 'upregulated'
+names(keyvals4.colour)[keyvals4.colour == 'grey'] <- 'non-significant'
+names(keyvals4.colour)[keyvals4.colour == 'red'] <- 'downregulated'
 
 keyvals413.colour <- ifelse(
   res_4_13$log2FoldChange < -1.0, 'red',
   ifelse(res_4_13$log2FoldChange > 1.0, 'green',
          'grey'))
 keyvals413.colour[is.na(keyvals413.colour)] <- 'grey'
-names(keyvals413.colour)[keyvals413.colour == 'green'] <- 'high'
-names(keyvals413.colour)[keyvals413.colour == 'grey'] <- 'mid'
-names(keyvals413.colour)[keyvals413.colour == 'red'] <- 'low'
+names(keyvals413.colour)[keyvals413.colour == 'green'] <- 'upregulated'
+names(keyvals413.colour)[keyvals413.colour == 'grey'] <- 'non-significant'
+names(keyvals413.colour)[keyvals413.colour == 'red'] <- 'downregulated'
 
+# only label selected genes
+picked_genes = list('Zfp174', 'Ccl24', 'Prps1', 'Gm37510', 'Ccr7',
+                    'Clec7a', 'mt-Cytb', 'mt-Nd5', 'mt-Nd4', 'mt-Atp6',
+                    'Gm28437', 'mt-Co1', 'mt-Nd1', 'Enpep', 'Bnc2',
+                    'Brnp5', 'GaInt16', 'Vit', 'Has1', 'Aox3')
+  
 EnhancedVolcano(res_c_13,
                 lab = rownames(res_c_13),
                 x = 'log2FoldChange',
                 y = 'padj',
+                selectLab = picked_genes,
                 #selectLab = rownames(res_c_13)[which(names(keyvals.colour) %in% c('High', 'Low'))],
                 xlab = bquote(~Log[2]~ 'fold change'),
                 axisLabSize = 10,
                 title = 'Control vs IL-13',
-                pCutoff = 10e-5,
+                pCutoff = 0.05,
                 FCcutoff = 1.0,
                 pointSize = 1.5,
                 labSize = 3.0,
@@ -106,11 +113,12 @@ EnhancedVolcano(res_c_4,
                 lab = rownames(res_c_4),
                 x = 'log2FoldChange',
                 y = 'padj',
+                selectLab = picked_genes,
                 #selectLab = rownames(res_c_4)[which(names(keyvals.colour) %in% c('High', 'Low'))],
                 xlab = bquote(~Log[2]~ 'fold change'),
                 axisLabSize = 10,
                 title = 'Control vs IL-4',
-                pCutoff = 10e-5,
+                pCutoff = 0.05,
                 FCcutoff = 1.0,
                 pointSize = 1.5,
                 labSize = 3.0,
@@ -132,11 +140,12 @@ EnhancedVolcano(res_4_13,
                 lab = rownames(res_4_13),
                 x = 'log2FoldChange',
                 y = 'padj',
+                selectLab = picked_genes,
                 #selectLab = rownames(res_4_13)[which(names(keyvals.colour) %in% c('High', 'Low'))],
                 xlab = bquote(~Log[2]~ 'fold change'),
                 axisLabSize = 10,
                 title = 'IL-4 vs IL-13',
-                pCutoff = 10e-5,
+                pCutoff = 0.05,
                 FCcutoff = 1.0,
                 pointSize = 1.5,
                 labSize = 3.0,
