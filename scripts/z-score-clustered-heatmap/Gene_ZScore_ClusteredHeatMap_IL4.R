@@ -6,7 +6,7 @@
 library(pheatmap)
 library(DESeq2) # Assuming dds is a DESeqDataSet object
 
-dds <- readRDS("~/Downloads/dds_final_ctrl_IL4.rds")
+dds <- readRDS("./DEA_outputs/dds_final_ctrl_IL4.rds")
 
 norm_counts <- counts(dds, normalized = TRUE)
 

@@ -15,7 +15,7 @@ suppressPackageStartupMessages(library(ggplot2))
 
 ## Create geneID2GO mapping
 allGO2genes <- annFUN.org(
-  whichOnto = 'BP',
+  whichOnto = 'MF',
   feasibleGenes = NULL,
   mapping = 'org.Mm.eg.db',
   ID = 'symbol')
@@ -40,9 +40,9 @@ down_gene_list <- factor(as.integer(geneUniverse %in% downregulated_gene_names))
 names(up_gene_list) <- geneUniverse
 names(down_gene_list) <- geneUniverse
 
-up_GO_data <- new("topGOdata", description = "MusMusculus_control_il4", ontology = "BP", allGenes = up_gene_list, annot = annFUN.gene2GO, gene2GO = geneID2GO)
+up_GO_data <- new("topGOdata", description = "MusMusculus_control_il4", ontology = "MF", allGenes = up_gene_list, annot = annFUN.gene2GO, gene2GO = geneID2GO)
 
-down_GO_data <- new("topGOdata", description = "MusMusculus_control_il4", ontology = "BP", allGenes = down_gene_list, annot = annFUN.gene2GO, gene2GO = geneID2GO)
+down_GO_data <- new("topGOdata", description = "MusMusculus_control_il4", ontology = "MF", allGenes = down_gene_list, annot = annFUN.gene2GO, gene2GO = geneID2GO)
 
 up_result <- runTest(up_GO_data, algorithm = "weight01", statistic = "fisher")
 
@@ -67,9 +67,9 @@ down_gene_list <- factor(as.integer(geneUniverse %in% downregulated_gene_names))
 names(up_gene_list) <- geneUniverse
 names(down_gene_list) <- geneUniverse
 
-up_GO_data <- new("topGOdata", description = "MusMusculus_control_il13", ontology = "BP", allGenes = up_gene_list, annot = annFUN.gene2GO, gene2GO = geneID2GO)
+up_GO_data <- new("topGOdata", description = "MusMusculus_control_il13", ontology = "MF", allGenes = up_gene_list, annot = annFUN.gene2GO, gene2GO = geneID2GO)
 
-down_GO_data <- new("topGOdata", description = "MusMusculus_control_il13", ontology = "BP", allGenes = down_gene_list, annot = annFUN.gene2GO, gene2GO = geneID2GO)
+down_GO_data <- new("topGOdata", description = "MusMusculus_control_il13", ontology = "MF", allGenes = down_gene_list, annot = annFUN.gene2GO, gene2GO = geneID2GO)
 
 up_result <- runTest(up_GO_data, algorithm = "weight01", statistic = "fisher")
 
@@ -93,9 +93,9 @@ down_gene_list <- factor(as.integer(geneUniverse %in% downregulated_gene_names))
 names(up_gene_list) <- geneUniverse
 names(down_gene_list) <- geneUniverse
 
-up_GO_data <- new("topGOdata", description = "MusMusculus_il13_il4", ontology = "BP", allGenes = up_gene_list, annot = annFUN.gene2GO, gene2GO = geneID2GO)
+up_GO_data <- new("topGOdata", description = "MusMusculus_il13_il4", ontology = "MF", allGenes = up_gene_list, annot = annFUN.gene2GO, gene2GO = geneID2GO)
 
-down_GO_data <- new("topGOdata", description = "MusMusculus_il13_il4", ontology = "BP", allGenes = down_gene_list, annot = annFUN.gene2GO, gene2GO = geneID2GO)
+down_GO_data <- new("topGOdata", description = "MusMusculus_il13_il4", ontology = "MF", allGenes = down_gene_list, annot = annFUN.gene2GO, gene2GO = geneID2GO)
 
 up_result <- runTest(up_GO_data, algorithm = "weight01", statistic = "fisher")
 
@@ -155,9 +155,9 @@ down_GO_filtered_arranged %>%
 
 
 # Choose which plots to save
-# ggsave("./plots/go-plots/ctrl_vs_il4/GO_down_ctrl_vs_il4.png", width = 8, height = 6)
-# ggsave("./plots/go-plots/ctrl_vs_il13/GO_down_ctrl_vs_il13.png", width = 8, height = 6)
-ggsave("./plots/go-plots/il13_vs_il4/GO_down_il13_vs_il4.png", width = 8, height = 6)
+ggsave("./plots/go-plots-mf/ctrl_vs_il4/GO_down_ctrl_vs_il4.png", width = 8, height = 6)
+ggsave("./plots/go-plots-mf/ctrl_vs_il13/GO_down_ctrl_vs_il13.png", width = 8, height = 6)
+ggsave("./plots/go-plots-mf/il13_vs_il4/GO_down_il13_vs_il4.png", width = 8, height = 6)
 
 up_GO_filtered <- up_GO %>%
   mutate(GeneRatio = Significant/Annotated, weight01 = as.numeric(weight01)) %>%
@@ -192,9 +192,9 @@ up_GO_filtered_arranged %>%
   scale_y_continuous(limits = c(0,1), breaks = seq(0, 1, 0.25), expand = c(0, 0)) # this changes the scale of the axes  
 
 # Choose which plots to save
-# ggsave("./plots/go-plots/ctrl_vs_il4/GO_up_ctrl_vs_il4.png", width = 8, height = 6)
-# ggsave("./plots/go-plots/ctrl_vs_il13/GO_up_ctrl_vs_il13.png", width = 8, height = 6)
-ggsave("./plots/go-plots/il13_vs_il4/GO_up_il13_vs_il4.png", width = 8, height = 6)
+ggsave("./plots/go-plots-mf/ctrl_vs_il4/GO_up_ctrl_vs_il4.png", width = 8, height = 6)
+ggsave("./plots/go-plots-mf/ctrl_vs_il13/GO_up_ctrl_vs_il13.png", width = 8, height = 6)
+ggsave("./plots/go-plots-mf/il13_vs_il4/GO_up_il13_vs_il4.png", width = 8, height = 6)
 
 # Prepare data for combined plot
 # Add labels to upregulated and downregulated dataframes
@@ -231,6 +231,6 @@ joined_GO_filtered_arranged %>%
   facet_grid(.~ up_down)
 
 # Choose which plots to save 
-# ggsave("./plots/go-plots/ctrl_vs_il4/GO_up_down_ctrl_vs_il4.png", width = 10, height = 6)
-# ggsave("./plots/go-plots/ctrl_vs_il13/GO_up_down_ctrl_vs_il13.png", width = 10, height = 6)
-ggsave("./plots/go-plots/il13_vs_il4/GO_up_down_il13_vs_il4.png", width = 10, height = 6)
+ggsave("./plots/go-plots-mf/ctrl_vs_il4/GO_up_down_ctrl_vs_il4.png", width = 10, height = 6)
+ggsave("./plots/go-plots-mf/ctrl_vs_il13/GO_up_down_ctrl_vs_il13.png", width = 10, height = 6)
+ggsave("./plots/go-plots-mf/il13_vs_il4/GO_up_down_il13_vs_il4.png", width = 10, height = 6)

@@ -8,7 +8,7 @@ suppressPackageStartupMessages(library(pheatmap))
 suppressPackageStartupMessages(library(RColorBrewer))
 
 #read in the dds file
-dds <- readRDS("~/Downloads/dds_no_ctrlrep8_IL13.rds")
+dds <- readRDS("./DEA_outputs/dds_no_ctrlrep8_IL13.rds")
 
 # Perform log transformation on our count data
 rld <- rlog(dds)

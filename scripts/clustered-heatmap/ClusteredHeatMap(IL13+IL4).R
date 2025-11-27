@@ -5,7 +5,7 @@ library(DESeq2) # Assuming dds is a DESeqDataSet object
 # --- Existing Steps ---
 
 # read in the dds file (Assuming dds is in your environment or path is correct)
-dds <- readRDS("~/Downloads/dds_IL13_IL4 (2).rds")
+dds <- readRDS("./DEA_outputs/dds_IL13_IL4 (2).rds")
 
 # Perform log transformation on our count data
 rld <- rlog(dds)

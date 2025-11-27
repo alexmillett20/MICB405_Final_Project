@@ -4,9 +4,9 @@ library(ggplot2)
 library(ggpubr)
 
 # load .rds to R
-dds_control_13 <- readRDS("C:/Users/jeong/OneDrive/Desktop/UBC/25-26/MICB 405/Final assignemet/dds_final_ctrl_IL13.rds")
-dds_control_4 <- readRDS("C:/Users/jeong/OneDrive/Desktop/UBC/25-26/MICB 405/Final assignemet/dds_final_ctrl_IL4.rds")
-dds_13_4 <- readRDS("C:/Users/jeong/OneDrive/Desktop/UBC/25-26/MICB 405/Final assignemet/dds_final_IL13_IL4.rds")
+dds_control_13 <- readRDS("./DEA_outputs/dds_final_ctrl_IL13.rds")
+dds_control_4 <- readRDS("./DEA_outputs/dds_final_ctrl_IL4.rds")
+dds_13_4 <- readRDS("./DEA_outputs/dds_final_IL13_IL4.rds")
 
 # extract differential analysis results
 res_control_13 <- results(dds_control_13) # run statistical test
