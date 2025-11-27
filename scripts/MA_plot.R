@@ -13,7 +13,7 @@
 library(DESeq2)
 
 # load .rds to R
-dds <- readRDS("C:/Users/jeong/OneDrive/Desktop/UBC/25-26/MICB 405/Final assignemet/dds_no_ctrlrep8_IL13.rds")
+dds <- readRDS("./DEA_outputs/dds_no_ctrlrep8_IL13.rds")
 
 # plot
 plotMA(dds,main="MA PLOT", alpha=0.0001, ylim=c(-5, 5))
