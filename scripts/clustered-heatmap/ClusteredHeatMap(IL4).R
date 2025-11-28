@@ -1,6 +1,11 @@
+# MICB405 Final Project
+# Generate a clustered heat map for IL-4 compared to the control
+# Created by: Harper Rapkin
+# Last edited: Nov 28
+
 # Load the required library
 library(pheatmap)
-library(DESeq2) # Assuming dds is a DESeqDataSet object
+library(DESeq2) 
 
 # read in the dds file
 dds <- readRDS("./DEA_outputs/dds_no_ctrlrep8_IL4.rds")
@@ -17,7 +22,7 @@ sample_dist_matrix <- as.matrix(sample_dists)
 # 1. Restore the sample names from the rld object's columns
 sample_names <- colnames(rld)
 rownames(sample_dist_matrix) <- sample_names
-colnames(sample_dist_matrix) <- sample_names # Only do this if you want to keep the names in the output matrix, otherwise, the next line will override.
+colnames(sample_dist_matrix) <- sample_names 
 
 # 2. Define the desired order
 groups <- gsub("_rep_.*", "", sample_names)
@@ -28,7 +33,7 @@ sort_df <- data.frame(
   group = groups
 )
 
-# Sort first by group, then by sample name (to keep replicas consistent)
+# Sort first by group, then by sample name 
 # The order function returns the indices to achieve the sorted order.
 desired_order_indices <- order(sort_df$group, sort_df$sample)
 
@@ -38,8 +43,7 @@ reordered_samples <- sample_names[desired_order_indices]
 # 3. Apply the desired order to the distance matrix
 reordered_dist_matrix <- sample_dist_matrix[reordered_samples, reordered_samples]
 
-# Optional: Remove column names from the reordered matrix, 
-# as per your original script's logic, if you don't want them displayed.
+# Remove column names from the reordered matrix, 
 colnames(reordered_dist_matrix) <- NULL
 
 # Generate a heatmap using the pheatmap package.
