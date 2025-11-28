@@ -1,8 +1,13 @@
 #!/bin/bash
-# Script: run_star_alignment.sh
-# Purpose: Align paired-end reads using STAR
 # Author: Brendan Ng
-# Date: $(date +"%Y-%m-%d")
+# MICB405 Final Project Star Alignment Script
+# Date created: October 30, 2025
+# Last updated: October 30, 2025
+
+# This scripts performs STAR alignment on paired-end RNA-seq data.
+# It assumes the input FASTQ files are named in the format:
+# SAMPLE_1.fastq.gz and SAMPLE_2.fastq.gz for read pairs.
+# The fastq files and STAR index directory are stored on the MICB 405 server.
 
 # ============ CONFIGURATION ============
 RAW_DIR="/work/data/raw-data"

@@ -1,4 +1,12 @@
 #!/bin/bash
+# Author: Brendan Ng
+# MICB405 Final Project Rename Reads Script
+# Date created: October 31, 2025
+# Last updated: October 31, 2025
+
+# This script renames Accession numbers to descriptive sample names. 
+# The mapping file 'srr_sample_mapping.txt' should be in the format:
+# SRR123456,Treatment, Replicate Number (e.g., SRR123456,Control,1)
 
 mapping_file="srr_sample_mapping.txt"
 reads_dir="reads_per_gene"

@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+# Author: Brendan Ng
+# MICB405 Final Project GeneID to GO Mapping Script
+# Date created: November 18, 2025
+# Last updated: November 18, 2025
+
+# This script maps Entrez GeneIDs from a GTF file to GO terms using the gene2go database.
+# The GENE2GO_FILE and GTF_FILE were downloaded from NCBI and stored on the MICB 405 server.
 
 import re
 from collections import defaultdict

@@ -1,3 +1,16 @@
+# Author: Brendan Ng
+# MICB405 Final Project GO Analysis Script
+# Date created: November 3, 2025
+# Last updated: November 27, 2025
+
+# This script performs Gene Ontology (GO) enrichment analysis using the topGO package in R.
+# It analyzes upregulated and downregulated genes from differential expression analysis
+# between different treatment conditions (Control vs IL4, Control vs IL13, IL13 vs IL4).
+# The results are visualized using ggplot2 and saved as PNG files.
+# First, generate the GO mapping object.
+# Next, Choose which treatment comparisons to run the analysis on.
+# Lastly, visualize the GO results and save the plots.
+
 # if (!require("BiocManager", quietly = TRUE))
 #   install.packages("BiocManager")
 

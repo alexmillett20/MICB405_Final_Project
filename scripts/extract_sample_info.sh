@@ -1,4 +1,11 @@
 #!/bin/bash
+# Author: Brendan Ng
+# MICB405 Final Project Extract Sample Info From SraRunTable Script
+# Date created: October 31, 2025
+# Last updated: October 31, 2025
+
+# This script extracts sample information from the SraRunTable CSV file.
+# It retrieves the Run accession, treatment, and culture replicate number.
 
 # Input CSV file
 input="SraRunTable_PRJNA1240347.csv"
