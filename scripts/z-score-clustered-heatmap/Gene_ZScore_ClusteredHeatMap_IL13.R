@@ -1,10 +1,11 @@
 # MICB405 Final Project
+# Generate a clustered heat map on genes using Z score for IL-13 compared to the control
 # Created by: Harper Rapkin
-# Last edited: 21/11/2025
+# Last edited: Nov 28
 
 # Load the required library
 library(pheatmap)
-library(DESeq2) # Assuming dds is a DESeqDataSet object
+library(DESeq2)
 
 dds <- readRDS("./DEA_outputs/dds_final_ctrl_IL13.rds")
 
@@ -15,7 +16,7 @@ res <- results(dds)
 # Order by padj
 res_ordered <- res[order(res$padj), ]
 
-# Pick top 50 genes
+# Pick top 20 genes
 top_genes <- rownames(res_ordered)[1:20]
 
 mat <- norm_counts[top_genes, ]
@@ -41,11 +42,12 @@ sample_groups <- data.frame(
 )
 rownames(sample_groups) = reordered_samples
 
+#generate the heatmap
 pheatmap(
   mat_z,
   annotation_col = sample_groups,
   cluster_cols = FALSE,
-  cluster_rows = TRUE,
+  cluster_rows = TRUE, #force the desired clustering
   main = "Top DE Genes (Z-score standardized)",
   filename = "MICB405_IL13_Zscore_GeneHeatmap.png"
 )
