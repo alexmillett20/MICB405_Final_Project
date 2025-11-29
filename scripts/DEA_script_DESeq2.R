@@ -1,14 +1,14 @@
 # Author: Alexandra Millett
 # MICB405 Final Project DESeq2 Analysis
 # Date created: October 31, 2025
-# Last updated: November 24, 2025
+# Last updated: November 29, 2025
 
 # This script is to perform differential expression analysis for the MICB405 project.
 # The structure of the script to perform DEA is based on tutorial 7. 
 # First, all read counts files from STAR alignment are loaded. Then, DEA was performed separately for each comparison
 # (ctrl vs IL13, ctrl vs IL4, IL13 vs IL4), and PCA plots were generated from these DEA results.
-# Then, based on comparison of the PCA plot with all the samples (ctrl, IL13, IL4), and the PCA plots with two comparisons
-# (ctrl vs IL13, ctrl vs IL4, IL13 vs IL4), we generated final dds objects, labelled under FINALIZED DATA in this script.
+# Then, based on comparison of the PCA plot with all the samples (ctrl, IL13, IL4), the PCA plots with two comparisons
+# (ctrl vs IL13, ctrl vs IL4, IL13 vs IL4), and the sample heatmaps generated in , we generated final dds objects, labelled under FINALIZED DATA in this script.
 # These dds objects and PCA plots are what we used for downstream analysis and figure generation, and are labelled 'final'. 
 
 library(tidyverse)
@@ -414,7 +414,7 @@ PCA_plot_IL13_IL4 <- plotPCA(rld_IL13_IL4, intgroup = "treatment") +
 ggsave("./plots/PCA_plot_IL13_IL4.png", PCA_plot_IL13_IL4, width = 10, height = 10)
 
 ################ FINALIZED DATA -------------------------------------
-### Based on the heatmap results from the dds objects generated above, we will remove the following replicates: control_rep3, control_rep8, IL13_rep6
+### Based on the sample heatmap results from the dds objects generated above and the PCA plot from all data, we will remove the following replicates: control_rep3, control_rep8, IL13_rep6
 # redo dds control (no rep 3 and 8) vs IL4 -----------------------------
 combined_data_final_ctrl_IL4 <- data.frame(row.names = control_rep_1$gene_id,
                                         control_rep_1 = control_rep_1$total,
@@ -580,23 +580,28 @@ dds_final_IL13_IL4 <- readRDS("./DEA_outputs/dds_final_IL13_IL4.rds")
 # Get results for control vs IL4
 res_final_ctrl_IL4 <- results(dds_final_ctrl_IL4, name = "treatment_IL4_vs_control") %>% as.data.frame()
 
+# remove NA values
 res_final_ctrl_IL4_no_NA <- res_final_ctrl_IL4 %>%
   drop_na()
 
+# filter based on padj < 0.05
 res_filtered_ctrl_IL_4 <- res_final_ctrl_IL4_no_NA %>%
   filter(padj < 0.05)
 
+# also filter on log2FC +/- 1
 res_filtered_final_ctrl_IL_4 <- res_filtered_ctrl_IL_4 %>%
   filter(log2FoldChange <= -1 | log2FoldChange >= 1) %>%
   rownames_to_column("gene_id")
 
 write_csv(res_filtered_final_ctrl_IL_4, "./DEA_outputs/filtered_DE_genes_final_ctrl_vs_IL4.csv")
 
+# upregulated only
 res_filtered_up_final_ctrl_IL_4 <- res_filtered_final_ctrl_IL_4 %>%
   filter(log2FoldChange > 1)
 
 write_csv(res_filtered_up_final_ctrl_IL_4, "./DEA_outputs/filtered_upregulated_genes_final_ctrl_vs_IL4.csv")
 
+# downregulated only
 res_filtered_down_final_ctrl_IL_4 <- res_filtered_final_ctrl_IL_4 %>%
   filter(log2FoldChange < -1)
 
@@ -604,22 +609,29 @@ write_csv(res_filtered_down_final_ctrl_IL_4, "./DEA_outputs/filtered_downregulat
 
 # Get results for control vs IL13
 res_final_ctrl_IL13 <- results(dds_final_ctrl_IL13, name = "treatment_IL13_vs_control") %>% as.data.frame()
+
+# remove NA values
 res_final_ctrl_IL13_no_NA <- res_final_ctrl_IL13 %>%
   drop_na()
 
+# filter based on padj < 0.05
 res_filtered_ctrl_IL_13 <- res_final_ctrl_IL13_no_NA %>%
   filter(padj < 0.05)
 
+# also filter on log2FC +/- 1
 res_filtered_final_ctrl_IL_13 <- res_filtered_ctrl_IL_13 %>%
   filter(log2FoldChange <= -1 | log2FoldChange >= 1) %>%
   rownames_to_column("gene_id")
 
 write_csv(res_filtered_final_ctrl_IL_13, "./DEA_outputs/filtered_DE_genes_final_ctrl_vs_IL13.csv")
+
+# upregulated only
 res_filtered_up_final_ctrl_IL_13 <- res_filtered_final_ctrl_IL_13 %>%
   filter(log2FoldChange > 1)
 
 write_csv(res_filtered_up_final_ctrl_IL_13, "./DEA_outputs/filtered_upregulated_genes_final_ctrl_vs_IL13.csv")
 
+# downregulated only
 res_filtered_down_final_ctrl_IL_13 <- res_filtered_final_ctrl_IL_13 %>%
   filter(log2FoldChange < -1)
 
@@ -628,23 +640,28 @@ write_csv(res_filtered_down_final_ctrl_IL_13, "./DEA_outputs/filtered_downregula
 # Get results for IL13 vs IL4
 res_final_IL13_IL4 <- results(dds_final_IL13_IL4, name = "treatment_IL4_vs_IL13") %>% as.data.frame()
 
+# remove NA values
 res_final_IL13_IL4_no_NA <- res_final_IL13_IL4 %>%
   drop_na()
 
+# filter based on padj < 0.05
 res_filtered_IL13_IL4 <- res_final_IL13_IL4_no_NA %>%
   filter(padj < 0.05)
 
+# also filter on log2FC +/- 1
 res_filtered_final_IL13_IL4 <- res_filtered_IL13_IL4 %>%
   filter(log2FoldChange <= -1 | log2FoldChange >= 1) %>%
   rownames_to_column("gene_id")
 
 write_csv(res_filtered_final_IL13_IL4, "./DEA_outputs/filtered_DE_genes_final_IL13_vs_IL4.csv")
 
+# upregulated only
 res_filtered_up_final_IL13_IL4 <- res_filtered_final_IL13_IL4 %>%
   filter(log2FoldChange > 1)
 
 write_csv(res_filtered_up_final_IL13_IL4, "./DEA_outputs/filtered_upregulated_genes_final_IL13_vs_IL4.csv")
 
+# downregulated only
 res_filtered_down_final_IL13_IL4 <- res_filtered_final_IL13_IL4 %>%
   filter(log2FoldChange < -1)
 
