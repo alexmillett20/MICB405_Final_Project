@@ -95,3 +95,11 @@ STAR \
 #### Step 5: perform DEA using read counts
 
 Since we specified `--quantMode GeneCounts`, output files labelled `*_ReadsPerGene.out.tab` were downloaded locally and uploaded to this github repository. Since samples were labelled with their access numbers, we manually relabelled the samples based on the metadata file from the SRA. These were double checked by team members to ensure there was no mistake in relabelling.
+
+Under `scripts/DEA_script_DESeq2.R`, this is where the actual analysis occurred. We first performed DEA using all samples, to identify if there were any outliers. Then, we generated a PCA plot based on the rlog transformed dds object, and determined that control replicate 8 was an outlier. Next, we generated the results for the differential expression for each comparison of interest: control vs IL13, control vs IL4, and IL13 vs IL4. From this, we generated PCA plots as well as heatmaps based on the sample distances of the dds object, and identified control replicate 3 and IL13 replicate 6 as outliers. We reran the DEA using the finalised dataset without these outliers, and used these for all downstream analyses.
+
+We kept the scripts and plots with these intermediate steps for reproducibility and transparency, and showcase the plots in our supplementary material. 
+
+We determined differentially expressed genes as ones that satisfied a log2FC cut off of +/-1 and padj < 0.05. 
+
+Next, we generated heatmaps based on the Z scores of the genes, volcano plots to identify the DEGs between the conditions, MA plots to visualise this with respect to normalized expression of the genes, and then performed GO enrichment analysis. All scripts for these analyses are found under `scripts/`. 
