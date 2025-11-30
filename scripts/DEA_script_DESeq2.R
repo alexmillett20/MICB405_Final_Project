@@ -1,14 +1,14 @@
-# Author: Alexandra Millett
+# Author: Alexandra Millett & Brendan Ng
 # MICB405 Final Project DESeq2 Analysis
 # Date created: October 31, 2025
-# Last updated: November 29, 2025
+# Last updated: November 30, 2025
 
 # This script is to perform differential expression analysis for the MICB405 project.
 # The structure of the script to perform DEA is based on tutorial 7. 
 # First, all read counts files from STAR alignment are loaded. Then, DEA was performed separately for each comparison
 # (ctrl vs IL13, ctrl vs IL4, IL13 vs IL4), and PCA plots were generated from these DEA results.
 # Then, based on comparison of the PCA plot with all the samples (ctrl, IL13, IL4), the PCA plots with two comparisons
-# (ctrl vs IL13, ctrl vs IL4, IL13 vs IL4), and the sample heatmaps generated in , we generated final dds objects, labelled under FINALIZED DATA in this script.
+# (ctrl vs IL13, ctrl vs IL4, IL13 vs IL4), and the sample heatmaps generated in scripts/clsutered-heatmap, we generated final dds objects, labelled under FINALIZED DATA in this script.
 # These dds objects and PCA plots are what we used for downstream analysis and figure generation, and are labelled 'final'. 
 
 library(tidyverse)
@@ -131,6 +131,7 @@ IL13_rep_9 <- read_tsv("reads_per_gene/IL-13_rep_9_ReadsPerGene.out.tab",
 
 
 #### data wrangling --------------------------------------------
+# make dataframe with the read counts from the 'total' column for each sample, and the gene ID. 
 combined_data <- data.frame(row.names = control_rep_1$gene_id,
                   control_rep_1 = control_rep_1$total,
                   control_rep_3 = control_rep_3$total,
@@ -161,14 +162,14 @@ combined_data <- data.frame(row.names = control_rep_1$gene_id,
 # transform to matrix
 combined_data_matrix<- as.matrix(combined_data) 
 
-# Metadata for samples
+# Metadata for all samples with their labelled treatment
 metadata <- data.frame(row.names = colnames(combined_data_matrix), 
                        treatment = c("control", "control", "control", "control", "control", "control", "control",
                                      "IL4", "IL4", "IL4", "IL4", "IL4", "IL4", "IL4",
                                      "IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13"
                                      )
 )
-
+# create label column for PCA plot
 metadata$label <- rownames(metadata)
 
 colnames(combined_data_matrix) == rownames(metadata)
@@ -183,22 +184,24 @@ dds_matrix <- DESeqDataSetFromMatrix(countData = combined_data_matrix,
 # Set control
 dds_matrix$treatment <- relevel(dds_matrix$treatment, ref = "control")
 
+# generate dds object
 dds <- DESeq(dds_matrix)
 
 saveRDS(dds, "./DEA_outputs/dds_all_samples.rds")
 
 ##### generating plots -----------------------------------------------
 ##### all data
-# Perform log transformation on our count data
+# generate rlog transformed object from dds
 rld <- rlog(dds)
 
-# Generate a PCA plot with DESeq2's plotPCA function
+# Use plotPCA to make PCA plot based on rlog transformed dds object
 PCA_plot <- plotPCA(rld, intgroup = "treatment") +
   geom_text(aes(label = label))
 ggsave("./plots/PCA_plot_all_samples.png", PCA_plot, width = 10, height = 10)
 
 
 # redo dds without control rep 8 vs IL13 -----------------------------
+# make dataframe with the read counts from the 'total' column for each sample, and the gene ID. 
 combined_data_no_ctrlrep8 <- data.frame(row.names = control_rep_1$gene_id,
                             control_rep_1 = control_rep_1$total,
                             control_rep_3 = control_rep_3$total,
@@ -220,7 +223,7 @@ combined_data_no_ctrlrep8 <- data.frame(row.names = control_rep_1$gene_id,
 # transform to matrix
 combined_data_matrix_no_ctrlrep8 <- as.matrix(combined_data_no_ctrlrep8) 
 
-# Metadata for samples
+# Metadata for all samples with their labelled treatment
 metadata_no_ctrlrep8 <- data.frame(row.names = colnames(combined_data_matrix_no_ctrlrep8), 
                        treatment = c("control", "control", "control", "control", "control", "control",
                                      "IL4", "IL4", "IL4", "IL4", "IL4", "IL4", "IL4",
@@ -228,10 +231,11 @@ metadata_no_ctrlrep8 <- data.frame(row.names = colnames(combined_data_matrix_no_
                        )
 )
 
-
+# create label column for PCA plot
 metadata_no_ctrlrep8$label <- rownames(metadata_no_ctrlrep8)
 
 colnames(combined_data_matrix_no_ctrlrep8) == rownames(metadata_no_ctrlrep8)
+# all true
 
 # create dds_matrix
 dds_matrix_no_ctrlrep8 <- DESeqDataSetFromMatrix(countData = combined_data_matrix_no_ctrlrep8,  
@@ -242,11 +246,12 @@ dds_matrix_no_ctrlrep8 <- DESeqDataSetFromMatrix(countData = combined_data_matri
 # Set control
 dds_matrix_no_ctrlrep8$treatment <- relevel(dds_matrix_no_ctrlrep8$treatment, ref = "control")
 
-
+# generate dds object
 dds_no_ctrlrep8 <- DESeq(dds_matrix_no_ctrlrep8)
 saveRDS(dds_no_ctrlrep8, "./DEA_outputs/dds_no_ctrlrep8.rds")
 
 # dds without control rep 8 compared to IL13 -----------------------------
+# make dataframe with the read counts from the 'total' column for each sample, and the gene ID.
 combined_data_no_ctrlrep8_IL13 <- data.frame(row.names = control_rep_1$gene_id,
                                         control_rep_1 = control_rep_1$total,
                                         control_rep_3 = control_rep_3$total,
@@ -268,16 +273,17 @@ combined_data_no_ctrlrep8_IL13 <- data.frame(row.names = control_rep_1$gene_id,
 # transform to matrix
 combined_data_matrix_no_ctrlrep8_IL13 <- as.matrix(combined_data_no_ctrlrep8_IL13) 
 
-# Metadata for samples
+# Metadata for control and IL13 samples with their labelled treatment
 metadata_no_ctrlrep8_IL13 <- data.frame(row.names = colnames(combined_data_matrix_no_ctrlrep8_IL13), 
                                    treatment = c("control", "control", "control", "control", "control", "control",
                                                  "IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13"
                                    ))
 
-
+# create label column for PCA plot
 metadata_no_ctrlrep8_IL13$label <- rownames(metadata_no_ctrlrep8_IL13)
 
 colnames(combined_data_matrix_no_ctrlrep8_IL13) == rownames(metadata_no_ctrlrep8_IL13)
+# all true
 
 # create dds_matrix
 dds_matrix_no_ctrlrep8_IL13 <- DESeqDataSetFromMatrix(countData = combined_data_matrix_no_ctrlrep8_IL13,  
@@ -288,22 +294,23 @@ dds_matrix_no_ctrlrep8_IL13 <- DESeqDataSetFromMatrix(countData = combined_data_
 # Set control
 dds_matrix_no_ctrlrep8_IL13$treatment <- relevel(dds_matrix_no_ctrlrep8_IL13$treatment, ref = "control")
 
-
+# generate dds object
 dds_no_ctrlrep8_IL13 <- DESeq(dds_matrix_no_ctrlrep8_IL13)
 saveRDS(dds_no_ctrlrep8_IL13, "./DEA_outputs/dds_no_ctrlrep8_IL13.rds")
 
 ##### generating plots -----------------------------------------------
 ##### no control rep 8
-# Perform log transformation on our count data
+# generate rlog transformed object from dds
 rld_no_ctrlrep8 <- rlog(dds_no_ctrlrep8)
 
-# Generate a PCA plot with DESeq2's plotPCA function
+# Use plotPCA to make PCA plot based on rlog transformed dds object
 PCA_plot_no_ctrlrep8 <- plotPCA(rld_no_ctrlrep8, intgroup = "treatment") +
   geom_text(aes(label = label))
 ggsave("./plots/PCA_plot_no_ctrlrep8.png", PCA_plot_no_ctrlrep8, width = 10, height = 10)
 
 
 ## dds without control rep 8 compared to IL4 -----------------------------
+# make dataframe with the read counts from the 'total' column for each sample, and the gene ID.
 combined_data_no_ctrlrep8_IL4 <- data.frame(row.names = control_rep_1$gene_id,
                                              control_rep_1 = control_rep_1$total,
                                              control_rep_3 = control_rep_3$total,
@@ -323,16 +330,17 @@ combined_data_no_ctrlrep8_IL4 <- data.frame(row.names = control_rep_1$gene_id,
 # transform to matrix
 combined_data_matrix_no_ctrlrep8_IL4 <- as.matrix(combined_data_no_ctrlrep8_IL4) 
 
-# Metadata for samples
+# Metadata for control and IL4 samples with their labelled treatment
 metadata_no_ctrlrep8_IL4 <- data.frame(row.names = colnames(combined_data_matrix_no_ctrlrep8_IL4), 
                                         treatment = c("control", "control", "control", "control", "control", "control",
                                                       "IL4", "IL4", "IL4", "IL4", "IL4", "IL4", "IL4"
                                         ))
 
-
+# create label column for PCA plot
 metadata_no_ctrlrep8_IL4$label <- rownames(metadata_no_ctrlrep8_IL4)
 
 colnames(combined_data_matrix_no_ctrlrep8_IL4) == rownames(metadata_no_ctrlrep8_IL4)
+# all true
 
 # create dds_matrix
 dds_matrix_no_ctrlrep8_IL4 <- DESeqDataSetFromMatrix(countData = combined_data_matrix_no_ctrlrep8_IL4,  
@@ -343,21 +351,23 @@ dds_matrix_no_ctrlrep8_IL4 <- DESeqDataSetFromMatrix(countData = combined_data_m
 # Set control
 dds_matrix_no_ctrlrep8_IL4$treatment <- relevel(dds_matrix_no_ctrlrep8_IL4$treatment, ref = "control")
 
-
+# generate dds object
 dds_no_ctrlrep8_IL4 <- DESeq(dds_matrix_no_ctrlrep8_IL4)
 saveRDS(dds_no_ctrlrep8_IL4, "./DEA_outputs/dds_no_ctrlrep8_IL4.rds")
 
 ##### generating plots -----------------------------------------------
 ##### no control rep 8 and IL4 only
+# generate rlog transformed object from dds
 rld_no_ctrlrep8_IL4 <- rlog(dds_no_ctrlrep8_IL4)
 
-# Generate a PCA plot with DESeq2's plotPCA function
+# Use plotPCA to make PCA plot based on rlog transformed dds object
 PCA_plot_no_ctrlrep8_IL4 <- plotPCA(rld_no_ctrlrep8_IL4, intgroup = "treatment") +
   geom_text(aes(label = label))
 ggsave("./plots/PCA_plot_no_ctrlrep8_IL4.png", PCA_plot_no_ctrlrep8_IL4, width = 10, height = 10)
 
 
 ## dds IL13 compared to IL4 -----------------------------
+# make dataframe with the read counts from the 'total' column for each sample, and the gene ID.
 combined_data_IL13_IL4 <- data.frame(row.names = IL13_rep_1$gene_id,
                                             IL13_rep_1 = IL13_rep_1$total,
                                             IL13_rep_2 = IL13_rep_2$total,
@@ -380,16 +390,17 @@ combined_data_IL13_IL4 <- data.frame(row.names = IL13_rep_1$gene_id,
 # transform to matrix
 combined_data_matrix_IL13_IL4 <- as.matrix(combined_data_IL13_IL4) 
 
-# Metadata for samples
+# Metadata for IL13 and IL4 samples with their labelled treatment
 metadata_IL13_IL4 <- data.frame(row.names = colnames(combined_data_matrix_IL13_IL4), 
                                        treatment = c("IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13",
                                                      "IL4", "IL4", "IL4", "IL4", "IL4", "IL4", "IL4"
                                        ))
 
-
+# create label column for PCA plot
 metadata_IL13_IL4$label <- rownames(metadata_IL13_IL4)
 
 colnames(combined_data_matrix_IL13_IL4) == rownames(metadata_IL13_IL4)
+# all true
 
 # create dds_matrix
 dds_matrix_IL13_IL4 <- DESeqDataSetFromMatrix(countData = combined_data_matrix_IL13_IL4,  
@@ -400,15 +411,16 @@ dds_matrix_IL13_IL4 <- DESeqDataSetFromMatrix(countData = combined_data_matrix_I
 # Set control
 dds_matrix_IL13_IL4$treatment <- relevel(dds_matrix_IL13_IL4$treatment, ref = "IL13")
 
-
+# generate dds object
 dds_IL13_IL4 <- DESeq(dds_matrix_IL13_IL4)
 saveRDS(dds_IL13_IL4, "./DEA_outputs/dds_IL13_IL4.rds")
 
 ##### generating plots -----------------------------------------------
 #### IL13 and IL4 only
+# generate rlog transformed object from dds
 rld_IL13_IL4 <- rlog(dds_IL13_IL4)
 
-# Generate a PCA plot with DESeq2's plotPCA function
+# Use plotPCA to make PCA plot based on rlog transformed dds object
 PCA_plot_IL13_IL4 <- plotPCA(rld_IL13_IL4, intgroup = "treatment") +
   geom_text(aes(label = label))
 ggsave("./plots/PCA_plot_IL13_IL4.png", PCA_plot_IL13_IL4, width = 10, height = 10)
@@ -416,6 +428,7 @@ ggsave("./plots/PCA_plot_IL13_IL4.png", PCA_plot_IL13_IL4, width = 10, height = 
 ################ FINALIZED DATA -------------------------------------
 ### Based on the sample heatmap results from the dds objects generated above and the PCA plot from all data, we will remove the following replicates: control_rep3, control_rep8, IL13_rep6
 # redo dds control (no rep 3 and 8) vs IL4 -----------------------------
+# make dataframe with the read counts from the 'total' column for each sample, and the gene ID.
 combined_data_final_ctrl_IL4 <- data.frame(row.names = control_rep_1$gene_id,
                                         control_rep_1 = control_rep_1$total,
                                         control_rep_4 = control_rep_4$total,
@@ -433,15 +446,16 @@ combined_data_final_ctrl_IL4 <- data.frame(row.names = control_rep_1$gene_id,
 # transform to matrix
 combined_data_final_matrix_ctrl_IL4 <- as.matrix(combined_data_final_ctrl_IL4) 
 
-# Metadata for samples
+# Metadata for control and IL4 samples with their labelled treatment
 metadata_final_ctrl_IL4 <- data.frame(row.names = colnames(combined_data_final_matrix_ctrl_IL4), 
                                    treatment = c("control", "control", "control", "control", "control",
                                                  "IL4", "IL4", "IL4", "IL4", "IL4", "IL4", "IL4"))
 
-
+# create label column for PCA plot
 metadata_final_ctrl_IL4$label <- rownames(metadata_final_ctrl_IL4)
 
 colnames(combined_data_final_matrix_ctrl_IL4) == rownames(metadata_final_ctrl_IL4)
+# all true
 
 # create dds_matrix
 dds_matrix_final_ctrl_IL4 <- DESeqDataSetFromMatrix(countData = combined_data_final_matrix_ctrl_IL4,  
@@ -452,19 +466,23 @@ dds_matrix_final_ctrl_IL4 <- DESeqDataSetFromMatrix(countData = combined_data_fi
 # Set control
 dds_matrix_final_ctrl_IL4$treatment <- relevel(dds_matrix_final_ctrl_IL4$treatment, ref = "control")
 
-
+# generate dds object
 dds_final_ctrl_IL4 <- DESeq(dds_matrix_final_ctrl_IL4)
 saveRDS(dds_final_ctrl_IL4, "./DEA_outputs/dds_final_ctrl_IL4.rds")
 
 ##### generating plots -----------------------------------------------
 ### Control (no rep 8 or 3) and IL4
+# generate rlog transformed object from dds
 rld_final_ctrl_IL4 <- rlog(dds_final_ctrl_IL4)
+
+# Use plotPCA to make PCA plot based on rlog transformed dds object
 PCA_plot_final_ctrl_IL4 <- plotPCA(rld_final_ctrl_IL4, intgroup = "treatment") +
   geom_text(aes(label = label))
 ggsave("./plots/PCA_plot_final_ctrl_IL4.png", PCA_plot_final_ctrl_IL4, width = 10, height = 10)
 
 
 # redo dds control (no rep 3 and 8) vs IL13 (no rep 6) -----------------------------
+# make dataframe with the read counts from the 'total' column for each sample, and the gene ID.
 combined_data_final_ctrl_IL13 <- data.frame(row.names = control_rep_1$gene_id,
                                             control_rep_1 = control_rep_1$total,
                                             control_rep_4 = control_rep_4$total,
@@ -484,15 +502,16 @@ combined_data_final_ctrl_IL13 <- data.frame(row.names = control_rep_1$gene_id,
 # transform to matrix
 combined_data_final_matrix_ctrl_IL13 <- as.matrix(combined_data_final_ctrl_IL13) 
 
-# Metadata for samples
+# Metadata for control and IL13 samples with their labelled treatment
 metadata_final_ctrl_IL13 <- data.frame(row.names = colnames(combined_data_final_matrix_ctrl_IL13), 
                                        treatment = c("control", "control", "control", "control", "control",
                                                      "IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13"))
 
-
+# create label column for PCA plot
 metadata_final_ctrl_IL13$label <- rownames(metadata_final_ctrl_IL13)
 
 colnames(combined_data_final_matrix_ctrl_IL13) == rownames(metadata_final_ctrl_IL13)
+# all true
 
 # create dds_matrix
 dds_matrix_final_ctrl_IL13 <- DESeqDataSetFromMatrix(countData = combined_data_final_matrix_ctrl_IL13,  
@@ -503,19 +522,23 @@ dds_matrix_final_ctrl_IL13 <- DESeqDataSetFromMatrix(countData = combined_data_f
 # Set control
 dds_matrix_final_ctrl_IL13$treatment <- relevel(dds_matrix_final_ctrl_IL13$treatment, ref = "control")
 
-
+# generate dds object
 dds_final_ctrl_IL13 <- DESeq(dds_matrix_final_ctrl_IL13)
 saveRDS(dds_final_ctrl_IL13, "./DEA_outputs/dds_final_ctrl_IL13.rds")
 
 ##### generating plots -----------------------------------------------
 ### Control (no rep 8 or 3) and IL13 (no rep 6)
+# generate rlog transformed object from dds
 rld_final_ctrl_IL13 <- rlog(dds_final_ctrl_IL13)
+
+# Use plotPCA to make PCA plot based on rlog transformed dds object
 PCA_plot_final_ctrl_IL13 <- plotPCA(rld_final_ctrl_IL13, intgroup = "treatment") +
   geom_text(aes(label = label))
 ggsave("./plots/PCA_plot_final_ctrl_IL13.png", PCA_plot_final_ctrl_IL13, width = 10, height = 10)
 
 
 ## dds IL13 (no rep 6) compared to IL4 -----------------------------
+# make dataframe with the read counts from the 'total' column for each sample, and the gene ID.
 combined_data_final_IL13_IL4 <- data.frame(row.names = IL13_rep_1$gene_id,
                                      IL13_rep_1 = IL13_rep_1$total,
                                      IL13_rep_2 = IL13_rep_2$total,
@@ -537,16 +560,17 @@ combined_data_final_IL13_IL4 <- data.frame(row.names = IL13_rep_1$gene_id,
 # transform to matrix
 combined_data_final_matrix_IL13_IL4 <- as.matrix(combined_data_final_IL13_IL4) 
 
-# Metadata for samples
+# Metadata for IL13 and IL4 samples with their labelled treatment
 metadata_final_IL13_IL4 <- data.frame(row.names = colnames(combined_data_final_matrix_IL13_IL4), 
                                 treatment = c("IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13", "IL13",
                                               "IL4", "IL4", "IL4", "IL4", "IL4", "IL4", "IL4"
                                 ))
 
-
+# create label column for PCA plot
 metadata_final_IL13_IL4$label <- rownames(metadata_final_IL13_IL4)
 
 colnames(combined_data_final_matrix_IL13_IL4) == rownames(metadata_final_IL13_IL4)
+# all true
 
 # create dds_matrix
 dds_matrix_final_IL13_IL4 <- DESeqDataSetFromMatrix(countData = combined_data_final_matrix_IL13_IL4,  
@@ -557,14 +581,17 @@ dds_matrix_final_IL13_IL4 <- DESeqDataSetFromMatrix(countData = combined_data_fi
 # Set control
 dds_matrix_final_IL13_IL4$treatment <- relevel(dds_matrix_final_IL13_IL4$treatment, ref = "IL13")
 
-
+# generate dds object
 dds_final_IL13_IL4 <- DESeq(dds_matrix_final_IL13_IL4)
 saveRDS(dds_final_IL13_IL4, "./DEA_outputs/dds_final_IL13_IL4.rds")
 
 
 ##### generating plots -----------------------------------------------
 ### IL13 (no rep 6) and IL4
+# generate rlog transformed object from dds
 rld_final_IL13_IL4 <- rlog(dds_final_IL13_IL4)
+
+# Use plotPCA to make PCA plot based on rlog transformed dds object
 PCA_plot_final_IL13_IL4 <- plotPCA(rld_final_IL13_IL4, intgroup = "treatment") +
   geom_text(aes(label = label))
 ggsave("./plots/PCA_plot_final_IL13_IL4.png", PCA_plot_final_IL13_IL4, width = 10, height = 10)
