@@ -31,7 +31,7 @@ srr_sample_mapping.txt
 * **plots/**: This folder contains all the plots generated from intermediate steps and for the final report. Additional folders are found within this folder that contain the plots, organised by plot type (e.g. heatmap, go plots etc)
 * **reads_per_gene/**: This folder contains all the ReadsPerGene.out.tab files that were renamed according to the original SRR accessions, in `srr_sample_mapping.txt`.
 * **scripts/**: This folder contains all the scripts that were used for DEA, GOEA, and plot generation
-* **gene_GO_mapping.tsv**: .tsv file with the GO annotations labelled for \_Mus musculus* that was used for GOEA. Script used to generate is available in `scripts/geneIDtoGO.py`
+* **gene_GO_mapping.tsv**: .tsv file with the GO annotations labelled for \_Mus musculus* that was used for GOEA. Script used to generate is available in `scripts/geneIDtoGO.py`. This was not used for figures in the final report, but was tested prior to using the annFUN.org function. 
 * **srr_sample_mapping.txt**: this file contains the SRR accession IDs and the corresponding sample condition that was used for renaming the ReadsPerGene.out.tab files
 
 ### **Dataset**:
@@ -47,14 +47,14 @@ esearch -db sra -query PRJNA1240347 \
 
 ```
 
-Then, the samples we are testing were manually selected and added into `SRR_subset.list`, and used to upload the fastq files using the command below.
+Then, the samples we are testing were manually selected and added into `SRR_subset.list`, and used to upload the fastq files onto the course server using the command below. `SRR_subset.list` contains all samples from IL-13, IL-4, and control conditions only. 
 
 ```bash
 parallel --jobs 4 'fastq-dump --split-files --origfmt --gzip {}' :::: SRR_subset.list
 
 ```
 
-The metadata for the dataset was added using `scp` and is labelled as `SraRunTable_PRJNA1240347.csv`. This metadata contains all samples in case we want to check other samples for the analysis as well.
+The metadata for the dataset was added using `scp` and is labelled as `SraRunTable_PRJNA1240347.csv`, which contains the metadata for all samples in the dataset (which includes samples that we did not include for our analyses). 
 
 #### Step 2: download reference genome and annotation files
 
