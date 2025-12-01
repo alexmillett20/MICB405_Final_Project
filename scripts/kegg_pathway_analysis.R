@@ -5,6 +5,7 @@
 
 # This script is to look at the pathways of interest (Glycolysis and EMP pathways) to see whether any up or downregulated DEGs
 # map onto these pathways. 
+# ChatGPT was used to help with the coding of this workflow
 
 library(clusterProfiler)
 library(tidyverse)
