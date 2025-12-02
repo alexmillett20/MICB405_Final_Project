@@ -26,12 +26,12 @@ srr_sample_mapping.txt
 ```
 
 * **DEA_outputs/**: This folder contains the output dds objects that we generated for each of the comparisons (ctrl vs IL13, ctrl vs IL4, IL13 vs IL4). There are also intermediate dds objects that we generated prior to outlier removal. Anything labeled with 'final' is what we used for analysis, as these excluded outliers.
-* **aligned/**: This folder contains all the output files from STAR alignment (besides the aligned*sorted.bam files as these were too big to upload onto github). The ReadsPerGene.out.tab files were moved to `reads_per_gene/` for DEA.
+* **aligned/**: This folder contains all the output files from STAR alignment (besides the aligned.sorted.bam files as these were too big to upload onto github). The ReadsPerGene.out.tab files were moved to `reads_per_gene/` for DEA.
 * **fastqc-reports/**: This folder contains all the fastqc.html reports for all samples.
 * **plots/**: This folder contains all the plots generated from intermediate steps and for the final report. Additional folders are found within this folder that contain the plots, organised by plot type (e.g. heatmap, go plots etc)
 * **reads_per_gene/**: This folder contains all the ReadsPerGene.out.tab files that were renamed according to the original SRR accessions, in `srr_sample_mapping.txt`.
 * **scripts/**: This folder contains all the scripts that were used for DEA, GOEA, and plot generation
-* **gene_GO_mapping.tsv**: .tsv file with the GO annotations labelled for \_Mus musculus* that was used for GOEA. Script used to generate is available in `scripts/geneIDtoGO.py`. This was not used for figures in the final report, but was tested prior to using the annFUN.org function. 
+* **gene_GO_mapping.tsv**: .tsv file with the GO annotations labelled for _Mus musculus_ that was used for testing GOEA. Script used to generate is available in `scripts/geneIDtoGO.py`. This was not used for figures in the final report, but was tested prior to using the annFUN.org function with the org.Mm.eg.db database. 
 * **srr_sample_mapping.txt**: this file contains the SRR accession IDs and the corresponding sample condition that was used for renaming the ReadsPerGene.out.tab files
 
 ### **Dataset**:
@@ -54,7 +54,7 @@ parallel --jobs 4 'fastq-dump --split-files --origfmt --gzip {}' :::: SRR_subset
 
 ```
 
-The metadata for the dataset was added using `scp` and is labelled as `SraRunTable_PRJNA1240347.csv`, which contains the metadata for all samples in the dataset (which includes samples that we did not include for our analyses). 
+The metadata for the dataset was added using `scp` and is labelled as `SraRunTable_PRJNA1240347.csv`, which contains the metadata for all samples in the dataset (which includes samples that we did not include for our analyses). This is not uploaded onto the repository as it is not required for analysis.
 
 #### Step 2: download reference genome and annotation files
 
