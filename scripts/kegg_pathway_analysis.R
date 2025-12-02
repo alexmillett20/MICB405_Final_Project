@@ -1,11 +1,10 @@
 # KEGG pathway analysis
 # Author: Alexandra Millett
 # Date created: Nov 27, 2025
-# Last updated: Nov 29, 2025
+# Last updated: Dec 2, 2025
 
 # This script is to look at the pathways of interest (Glycolysis and EMP pathways) to see whether any up or downregulated DEGs
 # map onto these pathways. 
-# ChatGPT was used to help with the coding of this workflow
 
 library(clusterProfiler)
 library(tidyverse)
@@ -19,15 +18,18 @@ working_path <- "../.." # relative to output path (top level of repository)
 ##### IL13 vs IL4 -------------------------
 # DEG results
 DEGs_IL13_IL4 <- read.csv("./DEA_outputs/filtered_DE_genes_final_IL13_vs_IL4.csv")
-
+# make symbol column from gene ID
+DEGs_IL13_IL4$SYMBOL <- DEGs_IL13_IL4$gene_id
 # gene names
 gene_names <- DEGs_IL13_IL4$gene_id
-# Log2FC values
-FC <- DEGs_IL13_IL4$log2FoldChange
 # convert to entrez ID from gene symbol
 gene_entrez_ids <- bitr(gene_names, fromType = "SYMBOL", toType = "ENTREZID", OrgDb = org.Mm.eg.db)
+# add entrez IDs to merged df
+merged_df <- merge(DEGs_IL13_IL4, gene_entrez_ids, by = "SYMBOL")
+# Log2FC values
+FC <- merged_df$log2FoldChange
 # add names to FC data
-names(FC) <- gene_entrez_ids$ENTREZID
+names(FC) <- merged_df$ENTREZID
 
 setwd(output_path)
 # glycolysis
@@ -52,21 +54,25 @@ path <- pathview(gene.data = FC,
 setwd(working_path)
 # DEG results
 DEGs_ctrl_IL13 <- read.csv("./DEA_outputs/filtered_DE_genes_final_ctrl_vs_IL13.csv")
-
+# make symbol column from gene ID
+DEGs_ctrl_IL13$SYMBOL <- DEGs_ctrl_IL13$gene_id
 # gene names
-gene_names <- DEGs_ctrl_IL13$gene_id
-# Log2FC values
-FC <- DEGs_ctrl_IL13$log2FoldChange
+gene_names <- DEGs_ctrl_IL13$SYMBOL
 # convert to entrez ID from gene symbol
 gene_entrez_ids <- bitr(gene_names, fromType = "SYMBOL", toType = "ENTREZID", OrgDb = org.Mm.eg.db)
-# 0.36% of input gene IDs failed to map. 
+# 0.36% of input gene IDs failed to map. (2 genes)
+# add entrez IDs to merged df
+merged_df <- merge(DEGs_ctrl_IL13, gene_entrez_ids, by = "SYMBOL")
 
 # check which gene did not map
-setdiff(gene_names, gene_entrez_ids$SYMBOL)
-# Gene = LOC118567478/0610040J01Rik
+setdiff(gene_names, merged_df$SYMBOL)
+# Genes = LOC118567478, 0610040J01Rik
+
+# Log2FC values
+FC <- merged_df$log2FoldChange
 
 # add names to FC data
-names(FC) <- gene_entrez_ids$ENTREZID
+names(FC) <- merged_df$ENTREZID
 
 setwd(output_path)
 # glycolysis
@@ -91,16 +97,20 @@ path$plot.data.gene
 setwd(working_path)
 # DEG results
 DEGs_ctrl_IL4 <- read.csv("./DEA_outputs/filtered_DE_genes_final_ctrl_vs_IL4.csv")
-
+# make symbol column from gene ID
+DEGs_ctrl_IL4$SYMBOL <- DEGs_ctrl_IL4$gene_id
 # gene names
-gene_names <- DEGs_ctrl_IL4$gene_id
-# Log2FC values
-FC <- DEGs_ctrl_IL4$log2FoldChange
+gene_names <- DEGs_ctrl_IL4$SYMBOL
 # convert to entrez ID from gene symbol
 gene_entrez_ids <- bitr(gene_names, fromType = "SYMBOL", toType = "ENTREZID", OrgDb = org.Mm.eg.db)
+# add entrez IDs to merged df
+merged_df <- merge(DEGs_ctrl_IL4, gene_entrez_ids, by = "SYMBOL")
+
+# Log2FC values
+FC <- merged_df$log2FoldChange
 
 # add names to FC data
-names(FC) <- gene_entrez_ids$ENTREZID
+names(FC) <- merged_df$ENTREZID
 
 setwd(output_path)
 # glycolysis
