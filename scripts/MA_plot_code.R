@@ -13,12 +13,11 @@ library(ggpubr)
 
 ## load .rds to R ##
 # control vs. IL-13
-dds_control_13 <- readRDS("C:/Users/jeong/OneDrive/Desktop/UBC/25-26/MICB 405/Final assignemet/dds_final_ctrl_IL13.rds")
+dds_control_13 <- readRDS("./DEA_outputs/dds_final_ctrl_IL13.rds")
 # control vs. IL-4
-dds_control_4 <- readRDS("C:/Users/jeong/OneDrive/Desktop/UBC/25-26/MICB 405/Final assignemet/dds_final_ctrl_IL4.rds")
+dds_control_4 <- readRDS("./DEA_outputs/dds_final_ctrl_IL4.rds")
 # IL-13 vs. IL-4
-dds_13_4 <- readRDS("C:/Users/jeong/OneDrive/Desktop/UBC/25-26/MICB 405/Final assignemet/dds_final_IL13_IL4.rds")
-
+dds_13_4 <- readRDS("./DEA_outputs/dds_final_IL13_IL4.rds")
 ## extract differential analysis results ##
 # control vs. IL-13
 res_control_13 <- results(dds_control_13) # run statistical test
