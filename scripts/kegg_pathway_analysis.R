@@ -5,7 +5,7 @@
 
 # This script is to look at the pathways of interest (Glycolysis and EMP pathways) to see whether any up or downregulated DEGs
 # map onto these pathways. 
-# ChatGPT was used to help with coding of this script
+# ChatGPT was used to help with coding of this script to visualise the KEGG pathways of interest
 
 library(clusterProfiler)
 library(tidyverse)
