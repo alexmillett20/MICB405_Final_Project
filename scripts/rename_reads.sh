@@ -8,6 +8,8 @@
 # The mapping file 'srr_sample_mapping.txt' should be in the format:
 # SRR123456,Treatment, Replicate Number (e.g., SRR123456,Control,1)
 
+# ChatGPT was used to help generate this script.
+
 mapping_file="srr_sample_mapping.txt"
 reads_dir="reads_per_gene"
 

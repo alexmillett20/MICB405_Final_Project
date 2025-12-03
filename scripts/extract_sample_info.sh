@@ -7,6 +7,8 @@
 # This script extracts sample information from the SraRunTable CSV file.
 # It retrieves the Run accession, treatment, and culture replicate number.
 
+# ChatGPT was used to help generate this script.
+
 # Input CSV file
 input="SraRunTable_PRJNA1240347.csv"
 # Output file

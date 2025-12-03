@@ -9,6 +9,8 @@
 # SAMPLE_1.fastq.gz and SAMPLE_2.fastq.gz for read pairs.
 # The fastq files and STAR index directory are stored on the MICB 405 server.
 
+# ChatGPT was used to help generate the structure of this script. Modifications were made to the STAR command parameters to suit project needs.
+
 # ============ CONFIGURATION ============
 RAW_DIR="/work/data/raw-data"
 OUT_DIR="/work/data/aligned"

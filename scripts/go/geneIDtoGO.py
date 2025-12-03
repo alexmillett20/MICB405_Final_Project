@@ -7,6 +7,8 @@
 # This script maps Entrez GeneIDs from a GTF file to GO terms using the gene2go database.
 # The GENE2GO_FILE and GTF_FILE were downloaded from NCBI and stored on the MICB 405 server.
 
+# ChatGPT was used to help generate the structure of this script.
+
 import re
 from collections import defaultdict
 
