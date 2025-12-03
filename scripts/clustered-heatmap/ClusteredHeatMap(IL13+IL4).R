@@ -2,6 +2,7 @@
 # Generate a clustered heat map for IL-13 compared to IL-4
 # Created by: Harper Rapkin
 # Last edited: Nov 28
+# ChatGPT was used to cluster the groups on the final heatmap
 
 # Load the required library
 library(pheatmap)
