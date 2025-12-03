@@ -2,6 +2,7 @@
 # Generate a clustered heat map on genes using Z score for IL-13 compared to IL-4
 # Created by: Harper Rapkin
 # Last edited: Nov 28
+# ChatGPT was used to develop code for this by asking to modify existing clustered heatmap but using specific genes and Z score
 
 # Load the required library
 library(pheatmap)
