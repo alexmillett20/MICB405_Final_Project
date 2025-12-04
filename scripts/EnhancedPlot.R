@@ -1,14 +1,8 @@
 # MICB405 Final Project Volcano Plot
 # Date created: Parsa Nayyara, Nov 5, 2025
-# Last updated: Parsa Nayyara, Nov 5, 2025
+# Last updated: Parsa Nayyara, Dec 3, 2025
 
 # This script is to plot DESeq2 object in volcano plots with EnhancedVolcano
-
-# Install EnhancedVolcano
-#if (!require("BiocManager", quietly = TRUE))
-#  install.packages("BiocManager")
-
-#BiocManager::install("EnhancedVolcano")
 
 # Import packages
 suppressPackageStartupMessages(library(tidyverse))
@@ -17,34 +11,19 @@ suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(EnhancedVolcano))
 
 #Load DESeq2 object
-dds_c_13 <- readRDS("./DEA_outputs/dds_no_ctrlrep8_IL13.rds")
-dds_c_4 <- readRDS("./DEA_outputs/dds_no_ctrlrep8_IL4.rds")
-dds_4_13 <- readRDS("./DEA_outputs/dds_IL13_IL4.rds")
+dds_c_13 <- readRDS("./DEA_outputs/dds_final_ctrl_IL13.rds")
+dds_c_4 <- readRDS("./DEA_outputs/dds_final_ctrl_IL4.rds")
+dds_4_13 <- readRDS("./DEA_outputs/dds_final_IL13_IL4.rds")
 
 #extract results
 res_c_13 <- results(dds_c_13,
                contrast = c("treatment", "IL13", "control"))
-#res_c_13 <- lfcShrink(dds_c_13,
-#                 contrast = c("treatment", "IL13", "control"),
-#                 res=res, type = 'normal')
 
 res_c_4 <- results(dds_c_4,
                     contrast = c("treatment", "IL4", "control"))
-#res_c_4 <- lfcShrink(dds_c_4,
-#                 contrast = c("treatment", "IL4", "control"),
-#                 res=res, type = 'normal')
 
 res_4_13 <- results(dds_4_13,
                     contrast = c("treatment", "IL13", "IL4"))
-#res_4_13 <- lfcShrink(dds_4_13,
-#                 contrast = c("treatment", "IL13", "IL4"),
-#                 res=res, type = 'normal')
-
-#plot most basic volcano plot
-#EnhancedVolcano(res_c_13,
-#                lab = rownames(res_c_13),
-#                x = 'log2FoldChange',
-#                y = 'padj')
 
 # create custom key-value pairs for 'high', 'low', non-significant expression by fold-change
 
@@ -87,7 +66,6 @@ EnhancedVolcano(res_c_13,
                 x = 'log2FoldChange',
                 y = 'padj',
                 selectLab = picked_genes,
-                #selectLab = rownames(res_c_13)[which(names(keyvals.colour) %in% c('High', 'Low'))],
                 xlab = bquote(~Log[2]~ 'fold change'),
                 axisLabSize = 10,
                 title = 'Control vs IL-13',
@@ -114,7 +92,6 @@ EnhancedVolcano(res_c_4,
                 x = 'log2FoldChange',
                 y = 'padj',
                 selectLab = picked_genes,
-                #selectLab = rownames(res_c_4)[which(names(keyvals.colour) %in% c('High', 'Low'))],
                 xlab = bquote(~Log[2]~ 'fold change'),
                 axisLabSize = 10,
                 title = 'Control vs IL-4',
@@ -141,10 +118,9 @@ EnhancedVolcano(res_4_13,
                 x = 'log2FoldChange',
                 y = 'padj',
                 selectLab = picked_genes,
-                #selectLab = rownames(res_4_13)[which(names(keyvals.colour) %in% c('High', 'Low'))],
                 xlab = bquote(~Log[2]~ 'fold change'),
                 axisLabSize = 10,
-                title = 'IL-4 vs IL-13',
+                title = 'IL-13 vs IL-4',
                 pCutoff = 0.05,
                 FCcutoff = 1.0,
                 pointSize = 1.5,
@@ -163,3 +139,23 @@ EnhancedVolcano(res_4_13,
                 borderWidth = 1.0,
                 borderColour = 'black')
 
+
+# count upregulated and downregulated genes
+
+print("Downregulated (control vs IL4)")
+sum(res_c_4$log2FoldChange < -1 & res_c_4$padj < 0.05, na.rm=TRUE)
+
+print("Upregulated (control vs IL4)")
+sum(res_c_4$log2FoldChange > 1 & res_c_4$padj < 0.05, na.rm=TRUE)
+
+print("Downregulated (control vs IL13)")
+sum(res_c_13$log2FoldChange < -1 & res_c_13$padj < 0.05, na.rm=TRUE)
+
+print("Upregulated (control vs IL13)")
+sum(res_c_13$log2FoldChange > 1 & res_c_13$padj < 0.05, na.rm=TRUE)
+
+print("Downregulated (IL13 vs IL4)")
+sum(res_4_13$log2FoldChange < -1 & res_4_13$padj < 0.05, na.rm=TRUE)
+
+print("Upregulated (IL13 vs IL4)")
+sum(res_4_13$log2FoldChange > 1 & res_4_13$padj < 0.05, na.rm=TRUE)
